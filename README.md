@@ -22,7 +22,7 @@ FallEstate gives you, in one HTML file you can open on any device, with all data
 - **Section 21 pre-checks**: blocks issuance unless deposit protected, prescribed info served, gas served, EPC served, How to Rent served, EPC ≥ E. Notice text generated when allowed.
 - **Section 8 grounds** (1, 2, 7, 8, 10, 11, 12, 13, 14, 17) with Form 3 text
 - **Client Money Protection** ledger: rent in, deposit held, deposit forwarded to scheme, disbursement to landlord, contractor payment, agency fee — daily held-balance shown
-- **Mansoor P3 audit chain** — every state change hash-chained, 6-year retention, JSON export
+- **P3 audit chain** — every state change hash-chained, 6-year retention, JSON export
 - **14-rule T0 Q&A** offline (Tenant Fees Act, deposit protection, S21 abolition status, S8 grounds, Right-to-Rent, ARLA code, CMP, holding-deposit triggers, EICR, Gas Safety, EPC/MEES, eviction process). T3 BYOK for Anthropic / Gemini / OpenAI / OpenRouter — never used unless you set a key.
 - **Bundle mesh** (`fall-estate`) — boots `sync.request`, broadcasts `property.*`, `tenancy.*`, `clientMoney.entry`, `deposit.protected`, `viewing.scheduled`. Also speaks `fall-signal` (KONOMI) and `fall-client` (IFA shared client schema).
 - **PWA** manifest + install
@@ -38,10 +38,10 @@ The disclaimer at the top of every screen tells the truth: this is an operationa
 
 ```
 fallestate/
-├── index.html      # single-file artifact (≈138 KB)
-├── README.md       # this
-├── LICENSE         # MIT
-└── .nojekyll       # Pages serves raw
+├── index.html # single-file artifact (≈138 KB)
+├── README.md # this
+├── LICENSE # MIT
+└── .nojekyll # Pages serves raw
 ```
 
 **Stack:** vanilla JS, vanilla CSS, IndexedDB primary / localStorage fallback. No build step, no npm, no framework, no CDN imports, no telemetry. Chrome 113+ primary target; modern Safari/Firefox work.
@@ -61,7 +61,7 @@ fallestate/
 
 **14-pt gate:** single HTML < 500 KB · IDB primary · KONOMI shim · fall-signal + fall-estate mesh · PWA manifest via data: URL · mobile-first · MIT · two-audience README · `.nojekyll` · informational disclaimer · audit chain on by default · oxblood/brass/cream/void aesthetic · forkable brand (firm `brandColor` override) · sovereign (no outbound calls without explicit BYOK).
 
-**Audit chain:** Mansoor P3 extended — `{i, ts, tool, adviserId, propertyId, tenancyId, clientId, action, reasoning, configVersion, prevHash, docHash, payload}`. Append-only. Hash-chained. 6-year retention (ARLA scheme + GDPR). JSON export from Firm tab → "Export".
+**Audit chain:** P3 extended — `{i, ts, tool, adviserId, propertyId, tenancyId, clientId, action, reasoning, configVersion, prevHash, docHash, payload}`. Append-only. Hash-chained. 6-year retention (ARLA scheme + GDPR). JSON export from Firm tab → "Export".
 
 **Forking:** override `state.firm.brandColor` (settings) and CSS var `--ox` to rebrand. The oxblood/brass palette is the bundle convention.
 
