@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>◊ FallEstate · sovereign UK estate + letting agent property management</title>
+<meta name="description" content="Sovereign single-file UK estate agent and letting agent tool. Multi-firm, multi-agent, multi-property. Sales pipeline, lettings pipeline, AST tenancy management, deposit protection, Client Money Protection, Gas/EPC/EICR tracker, Right-to-Rent, Section 21/8 issuance pre-checks. ARLA / NAEA / TPO / PRS aligned. Informational, not regulated advice.">
+<meta name="prime" content="883">
+<meta name="version" content="1.0.0">
+<meta name="theme-color" content="#0b0a0f">
+<link rel="manifest" href='data:application/manifest+json,{"name":"FallEstate","short_name":"estate","start_url":"./","display":"standalone","background_color":"%230b0a0f","theme_color":"%238b1a1a","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 192 192%27><rect width=%27192%27 height=%27192%27 fill=%27%230b0a0f%27 rx=%2828%27/><text x=%2796%27 y=%27138%27 font-family=%27Georgia, serif%27 font-size=%27124%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27%238b1a1a%27>◊</text></svg>","sizes":"192x192","type":"image/svg+xml"}]}'>
+<style>
+:root{
+  --void:#0b0a0f;--void-2:#13121a;--ink:#1a1922;--ink-2:#22212c;
+  --line:#2a2934;--line-soft:#1f1e28;
+  --cream:#e6e1d6;--cream-dim:#a8a395;--cream-muted:#6e6a5e;
+  --brass:#b8974a;--amber:#ff8c00;--ox:#8b1a1a;--ox-2:#a52424;
+  --green:#4ade80;--red:#ef4444;--blue:#60a5fa;--yellow:#fbbf24;
+  --serif:Georgia,'Libre Baskerville',ui-serif,serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'IBM Plex Mono','SF Mono',ui-monospace,Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--void);color:var(--cream);font:14px/1.55 var(--sans);min-height:100dvh;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;background:transparent;border:none;color:inherit}
+input,textarea,select{font-family:inherit;background:var(--ink);border:1px solid var(--line);color:var(--cream);border-radius:3px;padding:7px 10px;outline:none;font-size:13px}
+input:focus,textarea:focus,select:focus{border-color:var(--brass)}
+input[type=number]{font-family:var(--mono)}
+a{color:var(--brass)}a:hover{color:var(--amber)}
+
+.app{min-height:100dvh;display:grid;grid-template-rows:48px 1fr}
+header{display:flex;align-items:center;border-bottom:1px solid var(--line);background:var(--void-2);user-select:none}
+.brand{display:flex;align-items:center;gap:10px;padding:0 16px;height:100%;border-right:1px solid var(--line)}
+.brand .mark{width:28px;height:28px;background:linear-gradient(135deg,var(--ox),var(--ox-2));border-radius:5px;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:16px;color:var(--cream)}
+.brand .name{font-family:var(--serif);font-weight:600;font-size:14px;letter-spacing:0.02em}
+.brand .seal{font-family:var(--mono);font-size:9px;color:var(--cream-muted);letter-spacing:0.18em;text-transform:uppercase}
+
+.prop-pill{display:flex;align-items:center;gap:8px;padding:0 14px;height:100%;border-right:1px solid var(--line);cursor:pointer;font-size:12px;color:var(--cream-dim)}
+.prop-pill:hover{background:var(--ink);color:var(--cream)}
+.prop-pill .who{font-family:var(--serif);font-size:13px;color:var(--brass)}
+.prop-pill .meta{font-family:var(--mono);font-size:9px;color:var(--cream-muted);letter-spacing:0.1em;text-transform:uppercase}
+
+nav.tabs{display:flex;flex:1;overflow-x:auto;align-items:stretch}
+nav.tabs button{padding:0 14px;font-size:12px;color:var(--cream-dim);letter-spacing:0.04em;display:flex;align-items:center;gap:6px;border-right:1px solid var(--line-soft);height:100%;white-space:nowrap;border-top:2px solid transparent}
+nav.tabs button:hover{background:var(--ink);color:var(--cream)}
+nav.tabs button.active{background:var(--ink);color:var(--brass);border-top-color:var(--brass)}
+
+.tools-r{display:flex;align-items:center;gap:5px;padding:0 14px;height:100%;border-left:1px solid var(--line)}
+.tool-btn{padding:5px 11px;border-radius:3px;font-size:11px;color:var(--cream-dim);letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono);border:1px solid var(--line)}
+.tool-btn:hover{background:var(--ink);color:var(--cream);border-color:var(--brass)}
+.tool-btn.primary{background:var(--ox);color:var(--cream);border-color:var(--ox);font-weight:600}
+.tool-btn.primary:hover{background:var(--ox-2);border-color:var(--ox-2)}
+.tool-btn.t3{border-color:var(--blue);color:var(--blue)}
+
+.layout{display:grid;grid-template-columns:300px 1fr;min-height:calc(100dvh - 48px)}
+aside.sidebar{background:var(--void-2);border-right:1px solid var(--line);overflow-y:auto;padding:14px 12px 60px;display:flex;flex-direction:column;gap:10px}
+.sidebar h4{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;padding:0 4px}
+.sidebar-search{display:flex;flex-direction:column;gap:6px}
+.sidebar-search input,.sidebar-search select{font-size:12px;padding:6px 8px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.chip{padding:3px 8px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--line);color:var(--cream-dim);cursor:pointer}
+.chip.on{border-color:var(--brass);color:var(--brass);background:rgba(184,151,74,0.1)}
+.chip:hover{border-color:var(--brass);color:var(--brass)}
+.prop-list{display:flex;flex-direction:column;gap:3px}
+.prop-card{padding:9px 11px;border-radius:3px;cursor:pointer;border:1px solid transparent;border-left:3px solid var(--line);background:var(--ink);transition:all 0.1s}
+.prop-card:hover{background:var(--ink-2);border-left-color:var(--brass)}
+.prop-card.active{background:var(--ink-2);border-left-color:var(--ox);border-color:var(--line)}
+.prop-card .nm{font-family:var(--serif);font-size:13px;color:var(--cream);font-weight:600}
+.prop-card .sub{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.04em;margin-top:2px;display:flex;gap:6px;flex-wrap:wrap}
+.prop-card .sub .tag{padding:1px 5px;border-radius:2px;background:var(--void);color:var(--cream-dim);font-size:9px}
+.prop-card .sub .tag.sale{background:var(--ox);color:var(--cream)}
+.prop-card .sub .tag.let{background:rgba(96,165,250,0.18);color:var(--blue)}
+.prop-card .sub .tag.mgmt{background:rgba(184,151,74,0.18);color:var(--brass)}
+.empty-state{padding:18px;text-align:center;color:var(--cream-muted);font-size:12px;font-style:italic}
+
+main{padding:18px 22px 60px;overflow-y:auto;max-width:1320px;margin:0 auto;width:100%}
+
+.disclaimer{background:rgba(139,26,26,0.15);border:1px solid var(--ox);border-left:3px solid var(--ox);border-radius:3px;padding:12px 16px;margin-bottom:18px;font-size:12px;color:var(--cream)}
+.disclaimer strong{color:var(--brass)}
+
+.section-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;gap:14px;flex-wrap:wrap}
+.section-h h2{font-family:var(--serif);font-size:18px;font-weight:600;letter-spacing:0.01em}
+.section-h .sub{font-family:var(--mono);font-size:11px;color:var(--cream-muted);letter-spacing:0.08em;text-transform:uppercase}
+.section-h .actions{display:flex;gap:6px;flex-wrap:wrap}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{background:var(--void-2);border:1px solid var(--line);border-radius:4px;padding:16px 18px}
+.card h3{font-family:var(--serif);font-size:14px;font-weight:600;margin-bottom:10px;color:var(--cream);letter-spacing:0.01em}
+.card h3 .meta{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.1em;margin-left:8px}
+
+.kpi{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--line-soft);font-size:13px}
+.kpi:last-child{border-bottom:none}
+.kpi .l{color:var(--cream-dim)}
+.kpi .v{font-family:var(--mono);color:var(--cream);font-weight:500}
+.kpi .v.green{color:var(--green)}.kpi .v.red{color:var(--red)}.kpi .v.amber{color:var(--amber)}.kpi .v.brass{color:var(--brass)}.kpi .v.blue{color:var(--blue)}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.row.r3{grid-template-columns:1fr 1fr 1fr}
+.row.r4{grid-template-columns:1fr 1fr 1fr 1fr}
+.field label{display:block;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px}
+.field input,.field select,.field textarea{width:100%}
+.field .hint{font-size:10px;color:var(--cream-muted);margin-top:3px;font-family:var(--mono)}
+
+.btn{padding:7px 14px;border:1px solid var(--brass);border-radius:3px;font-size:12px;color:var(--cream);background:transparent;letter-spacing:0.04em;cursor:pointer}
+.btn:hover{border-color:var(--amber);color:var(--amber)}
+.btn.primary{background:var(--ox);color:var(--cream);border-color:var(--ox);font-weight:600}
+.btn.primary:hover{background:var(--ox-2);border-color:var(--ox-2);color:var(--cream)}
+.btn.danger{border-color:var(--ox);color:var(--ox)}
+.btn.danger:hover{border-color:var(--red);color:var(--red);background:rgba(239,68,68,0.08)}
+.btn.sm{padding:4px 9px;font-size:11px}
+.btn.ghost{border-color:var(--line);color:var(--cream-dim)}
+.btn.ghost:hover{border-color:var(--brass);color:var(--brass)}
+.btn[disabled]{opacity:0.4;cursor:not-allowed}
+
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line-soft);text-align:left}
+th{color:var(--brass);font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
+td.r{text-align:right;font-family:var(--mono)}
+tr.total td{font-weight:600;border-top:1px solid var(--brass);border-bottom:none;padding-top:10px}
+tr.total td.r{color:var(--brass)}
+tr.clickable{cursor:pointer}
+tr.clickable:hover{background:var(--ink)}
+
+.bar{height:6px;background:var(--ink);border-radius:3px;overflow:hidden;margin:6px 0}
+.bar > div{height:100%;background:var(--brass);transition:width 0.3s}
+.bar > div.green{background:var(--green)}.bar > div.red{background:var(--red)}.bar > div.amber{background:var(--amber)}.bar > div.blue{background:var(--blue)}
+
+.tag{display:inline-block;padding:2px 7px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--brass);color:var(--brass);margin-right:4px}
+.tag.amber{border-color:var(--amber);color:var(--amber)}
+.tag.green{border-color:var(--green);color:var(--green)}
+.tag.red{border-color:var(--red);color:var(--red)}
+.tag.blue{border-color:var(--blue);color:var(--blue)}
+.tag.dim{border-color:var(--line);color:var(--cream-muted)}
+.tag.ox{border-color:var(--ox);color:var(--ox)}
+
+.pipe{display:flex;gap:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:8px 0 12px}
+.pipe .stage{flex:1;padding:8px 10px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.06em;text-transform:uppercase;border-right:1px solid var(--line);background:var(--ink);position:relative}
+.pipe .stage:last-child{border-right:none}
+.pipe .stage.done{background:rgba(74,222,128,0.1);color:var(--green)}
+.pipe .stage.curr{background:var(--brass);color:var(--void);font-weight:700}
+.pipe .stage.curr::after{content:'▾';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);color:var(--brass);font-size:8px}
+
+.chat{display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto;padding:6px}
+.msg{padding:10px 14px;border-radius:6px;max-width:88%;font-size:13px;line-height:1.55;white-space:pre-wrap}
+.msg.user{background:var(--ink);align-self:flex-end;border-bottom-right-radius:2px}
+.msg.bot{background:var(--void-2);border:1px solid var(--line);border-left:2px solid var(--ox);align-self:flex-start;border-bottom-left-radius:2px}
+.msg.bot .src{font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.08em;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.chat-input{display:flex;gap:8px;margin-top:10px}
+.chat-input input{flex:1;padding:11px 14px}
+
+.sug{padding:10px 13px;background:var(--ink);border-radius:3px;border-left:3px solid var(--brass);margin-bottom:6px;font-size:13px}
+.sug .prio{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px}
+.sug.red{border-left-color:var(--red)}.sug.red .prio{color:var(--red)}
+.sug.amber{border-left-color:var(--amber)}.sug.amber .prio{color:var(--amber)}
+.sug.green{border-left-color:var(--green)}.sug.green .prio{color:var(--green)}
+.sug .why{font-size:11px;color:var(--cream-dim);margin-top:4px;font-style:italic}
+
+.list-row{display:grid;gap:6px;padding:7px 0;border-bottom:1px solid var(--line-soft);align-items:center}
+.list-row.head{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.list-row input,.list-row select{padding:5px 7px;font-size:12px;width:100%}
+.list-row .x{cursor:pointer;color:var(--cream-muted);font-family:var(--mono);text-align:center}
+.list-row .x:hover{color:var(--red)}
+
+.palette-bg,.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:flex-start;justify-content:center;padding-top:14vh;z-index:900;backdrop-filter:blur(4px)}
+.palette-bg.open,.modal-bg.open{display:flex}
+.modal-bg{align-items:center;padding:18px}
+.palette{background:var(--void-2);border:1px solid var(--ox);border-radius:5px;width:min(680px,90%);box-shadow:0 18px 50px rgba(0,0,0,0.7);overflow:hidden}
+.palette-hd{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.palette-hd .glyph{font-family:var(--serif);font-size:18px;color:var(--ox)}
+.palette-hd input{flex:1;border:none;background:transparent;font-size:15px;padding:4px}
+.palette-bd{max-height:55vh;overflow:auto;padding:8px}
+.palette-row{padding:9px 12px;border-radius:3px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px}
+.palette-row:hover{background:var(--ink)}
+.modal{background:var(--void-2);border:1px solid var(--ox);border-radius:4px;padding:22px;max-width:720px;width:100%;max-height:90vh;overflow:auto}
+.modal h2{font-family:var(--serif);font-size:17px;margin-bottom:14px;color:var(--brass)}
+.modal .actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ox);color:var(--cream);padding:9px 18px;border-radius:3px;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;font-weight:700;opacity:0;transition:all 0.22s;z-index:1100;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.onboard{max-width:620px;margin:5vh auto;padding:36px 32px;background:var(--void-2);border:1px solid var(--ox);border-radius:6px}
+.onboard h1{font-family:var(--serif);font-size:28px;color:var(--brass);margin-bottom:6px}
+.onboard .lead{color:var(--cream-dim);margin-bottom:20px;font-size:13px}
+.onboard .step{font-family:var(--mono);font-size:10px;color:var(--ox);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px}
+
+.cert-row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:var(--ink);border-left:3px solid var(--line);margin-bottom:5px;border-radius:3px;gap:8px}
+.cert-row.ok{border-left-color:var(--green)}
+.cert-row.amber{border-left-color:var(--amber)}
+.cert-row.red{border-left-color:var(--red)}
+.cert-row .nm{font-family:var(--serif);font-size:13px}
+.cert-row .due{font-family:var(--mono);font-size:11px;color:var(--cream-dim)}
+
+.precheck{padding:10px 13px;background:var(--ink);border-left:3px solid var(--line);margin-bottom:5px;border-radius:3px;display:flex;align-items:center;gap:10px}
+.precheck.pass{border-left-color:var(--green)}
+.precheck.fail{border-left-color:var(--red)}
+.precheck .ico{font-family:var(--mono);font-size:14px;width:18px}
+.precheck.pass .ico{color:var(--green)}
+.precheck.fail .ico{color:var(--red)}
+.precheck .lbl{flex:1;font-size:12px}
+.precheck .meta{font-family:var(--mono);font-size:10px;color:var(--cream-muted)}
+
+.drawer-toggle{display:none;padding:0 12px;height:100%;align-items:center;border-right:1px solid var(--line);cursor:pointer;color:var(--brass);font-size:18px}
+
+@media (max-width:880px){
+  .drawer-toggle{display:flex}
+  .layout{grid-template-columns:1fr}
+  aside.sidebar{position:fixed;top:48px;left:-320px;bottom:0;width:300px;z-index:50;transition:left 0.2s;box-shadow:0 0 30px rgba(0,0,0,0.6)}
+  aside.sidebar.open{left:0}
+  nav.tabs button{padding:0 10px;font-size:11px}
+  main{padding:14px 14px 50px}
+  .row,.row.r3,.row.r4{grid-template-columns:1fr}
+  .brand .seal{display:none}
+  .pipe{flex-wrap:wrap}
+  .pipe .stage{min-width:33%;border-bottom:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+<header>
+  <button class="drawer-toggle" onclick="toggleDrawer()" title="properties">☰</button>
+  <div class="brand">
+    <div class="mark">◊</div>
+    <div>
+      <div class="name">FallEstate</div>
+      <div class="seal">v1 · prime 883 · estate+let</div>
+    </div>
+  </div>
+  <div class="prop-pill" id="propPill" onclick="showApp('properties')" title="active property">
+    <span class="who" id="ppWho">— no property —</span>
+    <span class="meta" id="ppMeta"></span>
+  </div>
+  <nav class="tabs" id="tabNav"></nav>
+  <div class="tools-r">
+    <button class="tool-btn primary" onclick="openPalette()" title="ask · Ctrl+K">◊ ask</button>
+    <button class="tool-btn" id="tierBadge" onclick="openModal('settings')">T0</button>
+    <button class="tool-btn" onclick="openModal('settings')">⚙</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-search">
+    <h4>properties <span id="propCount" style="float:right;color:var(--cream-muted);font-weight:normal"></span></h4>
+    <input type="text" id="propFilter" placeholder="search ref · postcode · address" oninput="renderSidebar()">
+    <div class="chips" id="filterChipsType"></div>
+    <div class="chips" id="filterChipsStatus"></div>
+    <select id="filterAgent" onchange="renderSidebar()" style="font-size:11px"></select>
+    <button class="btn sm primary" onclick="newProperty()" style="width:100%;margin-top:4px">+ new property</button>
+  </div>
+  <div class="prop-list" id="propList"></div>
+</aside>
+<main id="view"></main>
+</div>
+</div>
+
+<div class="palette-bg" id="palette">
+  <div class="palette">
+    <div class="palette-hd">
+      <span class="glyph">◊</span>
+      <input type="text" id="pInput" placeholder="ask · 'Section 21 pre-checks · Tenant Fees Act caps · deposit protection 30-day rule · Right-to-Rent process'">
+      <span id="pTier" style="font-family:var(--mono);font-size:10px;color:var(--cream-muted)">T0</span>
+    </div>
+    <div class="palette-bd" id="pBody"></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h2 id="modalTitle">·</h2>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">·</div>
+
+<script>
+'use strict';
+
+// ════════════════════════════════════════════════════════════════
+// FallEstate v1.0.0 · sovereign UK estate + letting agent platform
+// prime 883 · v20.4 socket compliant · MIT · 2025-26
+// fall-estate bundle anchor · shared estate schema · BroadcastChannel mesh
+// INFORMATIONAL · NOT REGULATED LEGAL OR PROPERTY ADVICE
+// ════════════════════════════════════════════════════════════════
+const TOOLNAME='fallestate';const VERSION='1.0.0';const PRIME=883;const STORE='fallestate-v1';const CONFIG_V='fallestate@'+VERSION;
+
+const RULES={
+  // Tenant Fees Act 2019 caps
+  holdingDepositMaxWeeks: 1,
+  depositMaxWeeksUnderAnnualRent: 5,
+  depositMaxWeeksOverAnnualRent: 6,  // when annual rent >= £50k
+  annualRentThresholdHigher: 50000,
+  // Deposit protection
+  depositProtectionDays: 30,           // Housing Act 2004
+  prescribedInfoDays: 30,
+  amberDay: 14, redDay: 25,
+  // Gas Safety
+  gasSafetyIntervalMonths: 12,         // CP12 annual
+  // EPC
+  epcMinResidential: 'E',              // MEES residential
+  epcMinCommercial: 'E',               // from April 2025
+  // EICR
+  eicrIntervalYears: 5,                // domestic since 2020
+  // Right-to-Rent
+  rightToRentRequired: true,           // England since 2014
+  // Tenant Fees Act prohibited fees
+  prohibitedFees: ['admin fee','referencing','credit check','renewal','inventory','check-out','professional cleaning','viewing'],
+  // Section 21 pre-conditions
+  s21PreChecks: ['depositProtected','prescribedInfoServed','gasSafetyServed','epcServed','howToRentServed','licensedIfRequired'],
+  // Section 8 grounds (selected)
+  s8Grounds: {
+    1: 'Landlord requires for own use',
+    2: 'Mortgagee requires possession',
+    7: 'Death of tenant (within 12 months)',
+    8: 'Serious rent arrears (≥8 weeks weekly / ≥2 months monthly) - mandatory',
+    10: 'Rent arrears - discretionary',
+    11: 'Persistent rent arrears - discretionary',
+    12: 'Breach of tenancy - discretionary',
+    13: 'Deterioration of property',
+    14: 'Nuisance / annoyance / illegal use',
+    17: 'False statement to obtain tenancy'
+  }
+};
+
+const TABS=[
+  {id:'dashboard',name:'Dashboard',ico:'◐'},
+  {id:'properties',name:'Properties',ico:'◊'},
+  {id:'property',name:'Property',ico:'§'},
+  {id:'sales',name:'Sales',ico:'£'},
+  {id:'lettings',name:'Lettings',ico:'⌂'},
+  {id:'tenancies',name:'Tenancies',ico:'≡'},
+  {id:'compliance',name:'Compliance',ico:'◉'},
+  {id:'cmp',name:'CMP',ico:'⛨'},
+  {id:'qa',name:'Q & A',ico:'?'},
+  {id:'firm',name:'Firm',ico:'▦'}
+];
+
+let state={
+  active:'dashboard',
+  activePropertyId:null,
+  firm:null,
+  advisers:[],
+  clients:[],
+  properties:[],
+  tenancies:[],
+  inventories:[],
+  inspections:[],
+  clientMoney:[],
+  audit:[],
+  settings:{anthropicKey:'',geminiKey:'',openaiKey:'',openrouterKey:'',auditChain:true,currentAdviserId:null,brandColor:'#8b1a1a'},
+  chat:[],
+  drawerOpen:false,
+  filters:{q:'',type:'',status:'',agent:''}
+};
+
+const $=(s,p)=>{p=p||document;return p.querySelector(s)};
+const $$=(s,p)=>{p=p||document;return Array.from(p.querySelectorAll(s))};
+const uid=(pfx)=>(pfx||'')+(crypto.randomUUID?crypto.randomUUID().replace(/-/g,'').slice(0,12):Math.random().toString(36).slice(2,14));
+const now=()=>Date.now();
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>(+n||0).toLocaleString('en-GB',{minimumFractionDigits:0,maximumFractionDigits:0});
+const money=n=>'£'+fmt(n);
+const moneyP=n=>'£'+(+n||0).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+const dateStr=ts=>ts?new Date(ts).toISOString().slice(0,10):'—';
+const daysBetween=(a,b)=>Math.floor((b-a)/(1000*60*60*24));
+function toast(m){const t=$('#toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),1900)}
+async function sha256(s){try{const buf=new TextEncoder().encode(s);const h=await crypto.subtle.digest('SHA-256',buf);return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('')}catch(e){return ''}}
+
+// ════════════════════════════════════════════════════════════════
+// IDB · multi-store
+// ════════════════════════════════════════════════════════════════
+let db;const DB_VERSION=1;const STORES=['firms','advisers','clients','properties','tenancies','inventories','inspections','clientMoney','audit','settings'];
+function openDB(){return new Promise((res)=>{
+  try{
+    const r=indexedDB.open(STORE,DB_VERSION);
+    r.onupgradeneeded=e=>{const d=e.target.result;for(const s of STORES){if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:s==='settings'?undefined:'id'})}};
+    r.onsuccess=e=>{db=e.target.result;res(db)};
+    r.onerror=()=>{db=null;res(null)};
+  }catch(e){db=null;res(null)}
+})}
+function idbPut(store,rec,key){return new Promise((res)=>{
+  if(!db){lsPut(store,rec,key);return res()}
+  try{
+    const tx=db.transaction(store,'readwrite');const s=tx.objectStore(store);
+    const req=key?s.put(rec,key):s.put(rec);
+    tx.oncomplete=()=>res();tx.onerror=()=>{lsPut(store,rec,key);res()};
+  }catch(e){lsPut(store,rec,key);res()}
+})}
+function idbGetAll(store){return new Promise((res)=>{
+  if(!db){return res(lsAll(store))}
+  try{
+    const tx=db.transaction(store,'readonly');const req=tx.objectStore(store).getAll();
+    req.onsuccess=()=>res(req.result||[]);req.onerror=()=>res(lsAll(store));
+  }catch(e){res(lsAll(store))}
+})}
+function idbGet(store,key){return new Promise((res)=>{
+  if(!db){return res(lsGet(store,key))}
+  try{
+    const tx=db.transaction(store,'readonly');const req=tx.objectStore(store).get(key);
+    req.onsuccess=()=>res(req.result);req.onerror=()=>res(lsGet(store,key));
+  }catch(e){res(lsGet(store,key))}
+})}
+function idbDel(store,key){return new Promise((res)=>{
+  if(!db){lsDel(store,key);return res()}
+  try{
+    const tx=db.transaction(store,'readwrite');tx.objectStore(store).delete(key);
+    tx.oncomplete=()=>res();tx.onerror=()=>{lsDel(store,key);res()};
+  }catch(e){lsDel(store,key);res()}
+})}
+// localStorage fallback
+function lsKey(store,key){return STORE+':'+store+(key?':'+key:'')}
+function lsPut(store,rec,key){try{const k=lsKey(store,key||rec.id||'_');localStorage.setItem(k,JSON.stringify(rec))}catch(e){}}
+function lsGet(store,key){try{const v=localStorage.getItem(lsKey(store,key));return v?JSON.parse(v):null}catch(e){return null}}
+function lsDel(store,key){try{localStorage.removeItem(lsKey(store,key))}catch(e){}}
+function lsAll(store){const out=[];const pfx=lsKey(store)+':';try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(pfx))out.push(JSON.parse(localStorage.getItem(k)))}}catch(e){}return out}
+
+// ════════════════════════════════════════════════════════════════
+// Audit chain · Mansoor P3 · extended · 6yr retention
+// ════════════════════════════════════════════════════════════════
+async function auditPush(action,reasoning,payload,opts){
+  if(!state.settings.auditChain)return;
+  opts=opts||{};
+  const prev=state.audit.length?state.audit[state.audit.length-1].docHash:'';
+  const rec={
+    i:state.audit.length,
+    ts:now(),
+    tool:TOOLNAME,
+    adviserId:state.settings.currentAdviserId||'',
+    propertyId:opts.propertyId||state.activePropertyId||'',
+    tenancyId:opts.tenancyId||'',
+    clientId:opts.clientId||'',
+    action,reasoning:reasoning||'',
+    configVersion:CONFIG_V,
+    prevHash:prev,
+    payload:payload||{}
+  };
+  rec.docHash=await sha256(JSON.stringify(rec));
+  rec.id='au_'+rec.i+'_'+rec.ts;
+  state.audit.push(rec);
+  await idbPut('audit',rec);
+}
+
+// ════════════════════════════════════════════════════════════════
+// fall-estate mesh · BroadcastChannel · cross-tool sync
+// ════════════════════════════════════════════════════════════════
+let estateBC=null, signalBC=null, clientBC=null;
+function meshInit(){
+  try{
+    estateBC=new BroadcastChannel('fall-estate');
+    estateBC.onmessage=meshOnEstate;
+    estateBC.postMessage({v:1,type:'sync.request',ts:now(),source:TOOLNAME});
+  }catch(e){}
+  try{signalBC=new BroadcastChannel('fall-signal');signalBC.onmessage=meshOnSignal}catch(e){}
+  try{clientBC=new BroadcastChannel('fall-client');clientBC.onmessage=meshOnClient;clientBC.postMessage({v:1,type:'sync.request',ts:now(),source:TOOLNAME})}catch(e){}
+}
+function meshOnEstate(ev){
+  const m=ev.data||{};if(!m.type||m.source===TOOLNAME)return;
+  if(m.type==='sync.request'){
+    meshBroadcast('sync.snapshot',{
+      properties:state.properties,
+      tenancies:state.tenancies,
+      inventories:state.inventories,
+      inspections:state.inspections,
+      clientMoney:state.clientMoney
+    });
+  }else if(m.type==='sync.snapshot'&&m.payload){
+    const p=m.payload;
+    ['properties','tenancies','inventories','inspections','clientMoney'].forEach(k=>{
+      if(Array.isArray(p[k])){
+        const idx=new Map(state[k].map(r=>[r.id,r]));
+        for(const rec of p[k]){const ex=idx.get(rec.id);if(!ex||(rec.updatedAt||0)>(ex.updatedAt||0)){idx.set(rec.id,rec);idbPut(k,rec)}}
+        state[k]=Array.from(idx.values());
+      }
+    });
+    render();
+  }else if(m.type==='property.updated'&&m.payload){
+    upsertLocal('properties',m.payload);render();
+  }else if(m.type==='tenancy.created'||m.type==='tenancy.updated'){
+    if(m.payload){upsertLocal('tenancies',m.payload);render()}
+  }else if(m.type==='clientMoney.entry'&&m.payload){
+    upsertLocal('clientMoney',m.payload);
+  }
+}
+function meshOnSignal(ev){const m=ev.data||{};if(m.type==='ping')meshBroadcastSignal('pong',{tool:TOOLNAME,version:VERSION,prime:PRIME})}
+function meshOnClient(ev){
+  const m=ev.data||{};if(!m.type||m.source===TOOLNAME)return;
+  if(m.type==='client.updated'&&m.payload){upsertLocal('clients',m.payload);render()}
+  else if(m.type==='adviser.updated'&&m.payload){upsertLocal('advisers',m.payload);render()}
+  else if(m.type==='firm.updated'&&m.payload){state.firm=m.payload;idbPut('firms',m.payload);render()}
+  else if(m.type==='sync.snapshot'&&m.payload){
+    const p=m.payload;
+    if(Array.isArray(p.clients)){const idx=new Map(state.clients.map(r=>[r.id,r]));for(const r of p.clients){const ex=idx.get(r.id);if(!ex||(r.updatedAt||0)>(ex.updatedAt||0)){idx.set(r.id,r);idbPut('clients',r)}}state.clients=Array.from(idx.values())}
+    if(Array.isArray(p.advisers)){const idx=new Map(state.advisers.map(r=>[r.id,r]));for(const r of p.advisers){const ex=idx.get(r.id);if(!ex||(r.updatedAt||0)>(ex.updatedAt||0)){idx.set(r.id,r);idbPut('advisers',r)}}state.advisers=Array.from(idx.values())}
+    if(p.firm&&(!state.firm||(p.firm.updatedAt||0)>(state.firm.updatedAt||0))){state.firm=p.firm;idbPut('firms',p.firm)}
+    render();
+  }
+}
+function upsertLocal(store,rec){const a=state[store];const i=a.findIndex(x=>x.id===rec.id);if(i>=0)a[i]=rec;else a.push(rec);idbPut(store,rec)}
+let bcDebounce=null;
+function meshBroadcast(type,payload){
+  clearTimeout(bcDebounce);
+  bcDebounce=setTimeout(()=>{
+    try{estateBC&&estateBC.postMessage({v:1,type,ts:now(),source:TOOLNAME,payload})}catch(e){}
+  },280);
+}
+function meshBroadcastSignal(type,payload){try{signalBC&&signalBC.postMessage({v:1,type,ts:now(),source:TOOLNAME,payload})}catch(e){}}
+function meshBroadcastClient(type,payload){try{clientBC&&clientBC.postMessage({v:1,type,ts:now(),source:TOOLNAME,payload})}catch(e){}}
+
+// ════════════════════════════════════════════════════════════════
+// KONOMI shim · cross-tool socket compliance
+// ════════════════════════════════════════════════════════════════
+window.KONOMI=window.KONOMI||{};
+window.KONOMI[TOOLNAME]={version:VERSION,prime:PRIME,getState:()=>({firm:state.firm,properties:state.properties.length,tenancies:state.tenancies.length,activePropertyId:state.activePropertyId})};
+
+// ════════════════════════════════════════════════════════════════
+// Boot
+// ════════════════════════════════════════════════════════════════
+async function boot(){
+  await openDB();
+  state.firm=(await idbGetAll('firms'))[0]||null;
+  state.advisers=await idbGetAll('advisers')||[];
+  state.clients=await idbGetAll('clients')||[];
+  state.properties=await idbGetAll('properties')||[];
+  state.tenancies=await idbGetAll('tenancies')||[];
+  state.inventories=await idbGetAll('inventories')||[];
+  state.inspections=await idbGetAll('inspections')||[];
+  state.clientMoney=await idbGetAll('clientMoney')||[];
+  state.audit=(await idbGetAll('audit')||[]).sort((a,b)=>a.i-b.i);
+  const s=await idbGet('settings','main');
+  if(s)state.settings=Object.assign(state.settings,s);
+  meshInit();
+  renderTabs();
+  if(!state.firm||!state.firm.setupCompletedAt){
+    showOnboarding();
+  }else{
+    if(!state.activePropertyId&&state.properties.length)state.activePropertyId=state.properties[0].id;
+    render();
+  }
+  // shortcuts
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openPalette()}
+    if(e.key==='Escape'){closePalette();closeModal()}
+  });
+}
+
+function saveSettings(){idbPut('settings',state.settings,'main')}
+async function saveProperty(p){p.updatedAt=now();await idbPut('properties',p);upsertLocal('properties',p);meshBroadcast('property.updated',p)}
+async function saveTenancy(t){t.updatedAt=now();await idbPut('tenancies',t);upsertLocal('tenancies',t);meshBroadcast('tenancy.updated',t)}
+
+// ════════════════════════════════════════════════════════════════
+// Onboarding · firm → adviser → done
+// ════════════════════════════════════════════════════════════════
+function showOnboarding(){
+  const v=$('#view');
+  v.innerHTML=`
+  <div class="onboard">
+    <div class="step">Step 1 of 2 · Firm</div>
+    <h1>Welcome to FallEstate</h1>
+    <p class="lead">Sovereign UK estate + letting agent platform. Multi-firm, multi-agent, multi-property. ARLA Propertymark / NAEA Propertymark / TPO / PRS aligned. All data stays on this device.</p>
+    <div class="row">
+      <div class="field"><label>Firm name *</label><input id="ob_name" placeholder="e.g. Riverside Estates Ltd"></div>
+      <div class="field"><label>Trading name</label><input id="ob_trading" placeholder="optional"></div>
+    </div>
+    <div class="row r3">
+      <div class="field"><label>Companies House no.</label><input id="ob_ch" placeholder="01234567"></div>
+      <div class="field"><label>VAT no.</label><input id="ob_vat" placeholder="GB123 4567 89"></div>
+      <div class="field"><label>ICO reg.</label><input id="ob_ico" placeholder="ZA123456"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Professional body</label>
+        <select id="ob_body">
+          <option value="ARLA">ARLA Propertymark</option>
+          <option value="NAEA">NAEA Propertymark</option>
+          <option value="ARLA+NAEA">ARLA + NAEA Propertymark</option>
+          <option value="RICS">RICS</option>
+          <option value="UKALA">UKALA</option>
+          <option value="">Other / none</option>
+        </select>
+      </div>
+      <div class="field"><label>Redress scheme</label>
+        <select id="ob_redress">
+          <option value="TPO">TPO (The Property Ombudsman)</option>
+          <option value="PRS">PRS (Property Redress Scheme)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><label>CMP scheme *</label>
+        <select id="ob_cmp">
+          <option value="ClientMoneyProtect">Client Money Protect</option>
+          <option value="Propertymark">Propertymark Client Money Protection</option>
+          <option value="RICS">RICS Client Money Protection</option>
+          <option value="UKALA">UKALA Client Money Protection</option>
+          <option value="MoneyShield">Money Shield</option>
+          <option value="">Sales only / none</option>
+        </select>
+        <div class="hint">Mandatory for letting agents since 1 April 2019</div>
+      </div>
+      <div class="field"><label>Client money insurer</label><input id="ob_cmpins" placeholder="e.g. Hiscox"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>AML supervisor</label>
+        <select id="ob_aml">
+          <option value="HMRC">HMRC (default for estate agents)</option>
+          <option value="RICS">RICS</option>
+          <option value="">Other</option>
+        </select>
+      </div>
+      <div class="field"><label>HMRC AML reg. no.</label><input id="ob_amlref" placeholder="XAML00000123456"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>PI insurer</label><input id="ob_pi" placeholder="e.g. Hiscox"></div>
+      <div class="field"><label>PI policy no.</label><input id="ob_pipol"></div>
+    </div>
+    <button class="btn primary" onclick="onboardStep2()" style="margin-top:14px">Continue →</button>
+  </div>`;
+}
+function onboardStep2(){
+  const name=$('#ob_name').value.trim();if(!name){toast('Firm name required');return}
+  const firm={
+    id:'fm_'+uid(),createdAt:now(),updatedAt:now(),
+    name,
+    tradingName:$('#ob_trading').value.trim(),
+    companiesHouseNo:$('#ob_ch').value.trim(),
+    vatNumber:$('#ob_vat').value.trim(),
+    icoRef:$('#ob_ico').value.trim(),
+    professionalBody:$('#ob_body').value,
+    redressScheme:$('#ob_redress').value,
+    cmpScheme:$('#ob_cmp').value,
+    clientMoneyInsurer:$('#ob_cmpins').value.trim(),
+    amlSupervisor:$('#ob_aml').value,
+    amlRefNo:$('#ob_amlref').value.trim(),
+    piInsurer:$('#ob_pi').value.trim(),
+    piPolicyNo:$('#ob_pipol').value.trim(),
+    piExpiresAt:null,
+    brandColor:'#8b1a1a',brandLogoDataUri:'',
+    setupCompletedAt:null
+  };
+  state.firm=firm;
+  const v=$('#view');
+  v.innerHTML=`
+  <div class="onboard">
+    <div class="step">Step 2 of 2 · First agent</div>
+    <h1>Add your first agent</h1>
+    <p class="lead">You can add more agents later. Each agent has their own ID and audit trail.</p>
+    <div class="row">
+      <div class="field"><label>Name *</label><input id="ad_name" placeholder="e.g. Priya Singh"></div>
+      <div class="field"><label>Role</label>
+        <select id="ad_role">
+          <option value="Director">Director / Principal</option>
+          <option value="BranchManager">Branch Manager</option>
+          <option value="SalesNegotiator">Sales Negotiator</option>
+          <option value="LettingsNegotiator">Lettings Negotiator</option>
+          <option value="PropertyManager">Property Manager</option>
+          <option value="Administrator">Administrator</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Email</label><input id="ad_email" type="email"></div>
+      <div class="field"><label>Phone</label><input id="ad_phone"></div>
+    </div>
+    <button class="btn primary" onclick="onboardFinish()" style="margin-top:14px">Finish setup →</button>
+  </div>`;
+}
+async function onboardFinish(){
+  const nm=$('#ad_name').value.trim();if(!nm){toast('Agent name required');return}
+  const ad={
+    id:'ad_'+uid(),firmId:state.firm.id,createdAt:now(),updatedAt:now(),archivedAt:null,
+    name:nm,role:$('#ad_role').value,
+    email:$('#ad_email').value.trim(),phone:$('#ad_phone').value.trim(),
+    status:'active',startedAt:now(),leftAt:null
+  };
+  state.advisers.push(ad);await idbPut('advisers',ad);
+  state.settings.currentAdviserId=ad.id;
+  state.firm.setupCompletedAt=now();state.firm.updatedAt=now();
+  await idbPut('firms',state.firm);saveSettings();
+  // demo seed
+  await seedDemo();
+  await auditPush('firm.created','Initial firm setup',{firmId:state.firm.id});
+  meshBroadcastClient('firm.updated',state.firm);
+  meshBroadcastClient('adviser.updated',ad);
+  toast('Setup complete');
+  render();
+}
+
+async function seedDemo(){
+  // 1 vendor client (sale), 1 landlord, 1 tenant
+  const vendor={id:'cl_'+uid(),firmId:state.firm.id,createdAt:now(),updatedAt:now(),archivedAt:null,
+    title:'Mr',firstName:'James',lastName:'Carter',email:'james@example.com',phone:'+44 7700 900100',role:'seller',
+    address:{line1:'4 Park Crescent',city:'London',postcode:'NW1 4QP',country:'GB'},
+    adviserId:state.settings.currentAdviserId,kyc:{status:'verified',riskGrade:'low'}};
+  const landlord={id:'cl_'+uid(),firmId:state.firm.id,createdAt:now(),updatedAt:now(),archivedAt:null,
+    title:'Mrs',firstName:'Helen',lastName:'Mason',email:'helen@example.com',phone:'+44 7700 900200',role:'landlord',
+    address:{line1:'12 Oak Lane',city:'London',postcode:'SW19 5AA',country:'GB'},
+    adviserId:state.settings.currentAdviserId,kyc:{status:'verified',riskGrade:'low'},
+    selfManaging:false,taxStatus:'UK-resident',nrlScheme:false};
+  const tenant={id:'cl_'+uid(),firmId:state.firm.id,createdAt:now(),updatedAt:now(),archivedAt:null,
+    title:'Mx',firstName:'Alex',lastName:'Doyle',email:'alex@example.com',phone:'+44 7700 900300',role:'tenant',
+    address:{line1:'Prev. address',city:'London',postcode:'E1 6AN',country:'GB'},
+    adviserId:state.settings.currentAdviserId,kyc:{status:'verified',riskGrade:'low'},
+    referencesObtained:true,rightToRentCheckedAt:now()-7*86400000};
+  state.clients.push(vendor,landlord,tenant);
+  for(const c of [vendor,landlord,tenant])await idbPut('clients',c);
+
+  // 1 sale property
+  const sale={
+    id:'pr_'+uid(),firmId:state.firm.id,ts:now(),updatedAt:now(),archivedAt:null,
+    ref:'S-0001',listingType:'sale',status:'available',
+    address:{line1:'DEMO · 12 High St',line2:'',city:'London',region:'England',postcode:'NW1 6XE',country:'GB'},
+    postcode:'NW1 6XE',bedrooms:3,bathrooms:2,propertyType:'Terraced house',tenure:'Freehold',
+    epcRating:'D',epcExpiresAt:now()+365*86400000*3,
+    marketing:{asking:825000,listedAt:now()-21*86400000,listedOn:['Rightmove','Zoopla','OnTheMarket'],priceHistory:[{ts:now()-21*86400000,price:850000},{ts:now()-7*86400000,price:825000}]},
+    vendor:[vendor.id],landlord:[],agentId:state.settings.currentAdviserId,
+    viewings:[
+      {id:'vw_'+uid(),ts:now()-10*86400000,byClientId:'',byName:'Mr & Mrs Khan',feedback:'Loved kitchen, concerned re: parking',outcome:'interested'},
+      {id:'vw_'+uid(),ts:now()-5*86400000,byClientId:'',byName:'Ms Patel',feedback:'Too small for family',outcome:'not-proceeding'}
+    ],
+    offers:[
+      {id:'of_'+uid(),ts:now()-3*86400000,fromClientId:'',fromName:'Mr & Mrs Khan',amount:805000,conditions:'Subject to mortgage + survey',status:'pending'}
+    ],
+    rent:{pcm:0,deposit:0,holdingDeposit:0,frequency:'monthly'},
+    tenancy:null,inventories:[],inspections:[],
+    docs:[],timeline:[
+      {ts:now()-21*86400000,event:'Property listed',by:state.settings.currentAdviserId},
+      {ts:now()-15*86400000,event:'First viewing booked',by:state.settings.currentAdviserId}
+    ],
+    notes:'Sample sale property. Overwrite or delete.'
+  };
+
+  // 1 let property
+  const let1={
+    id:'pr_'+uid(),firmId:state.firm.id,ts:now(),updatedAt:now(),archivedAt:null,
+    ref:'L-0001',listingType:'let-residential',status:'rented',
+    address:{line1:'DEMO · 12 High St',line2:'Flat 4',city:'London',region:'England',postcode:'SW9 7XY',country:'GB'},
+    postcode:'SW9 7XY',bedrooms:2,bathrooms:1,propertyType:'Flat',tenure:'Leasehold',
+    epcRating:'C',epcExpiresAt:now()+365*86400000*4,
+    gasCheckExpiry:now()+220*86400000, eicrExpiry:now()+365*86400000*4,
+    marketing:{asking:1850,listedAt:now()-60*86400000,listedOn:['Rightmove','Zoopla'],priceHistory:[{ts:now()-60*86400000,price:1850}]},
+    vendor:[],landlord:[landlord.id],agentId:state.settings.currentAdviserId,
+    viewings:[{id:'vw_'+uid(),ts:now()-50*86400000,byClientId:tenant.id,byName:'Alex Doyle',feedback:'Wants to apply',outcome:'applied'}],
+    offers:[{id:'of_'+uid(),ts:now()-45*86400000,fromClientId:tenant.id,fromName:'Alex Doyle',amount:1850,conditions:'12mo AST, no pets',status:'accepted'}],
+    rent:{pcm:1850,deposit:2134,holdingDeposit:427,frequency:'monthly'},
+    tenancy:null,
+    docs:[],timeline:[
+      {ts:now()-60*86400000,event:'Property listed for let',by:state.settings.currentAdviserId},
+      {ts:now()-45*86400000,event:'Offer accepted',by:state.settings.currentAdviserId},
+      {ts:now()-30*86400000,event:'Tenancy commenced',by:state.settings.currentAdviserId}
+    ],
+    notes:'Sample let property. Overwrite or delete.'
+  };
+  state.properties.push(sale,let1);
+  for(const p of [sale,let1])await idbPut('properties',p);
+
+  // tenancy for let1
+  const ten={
+    id:'tn_'+uid(),firmId:state.firm.id,propertyId:let1.id,ts:now(),updatedAt:now(),archivedAt:null,
+    type:'AST',
+    startDate:dateStr(now()-30*86400000),
+    endDate:dateStr(now()+335*86400000),
+    termMonths:12,
+    rent:{pcm:1850,frequency:'monthly',dayDue:1},
+    tenantIds:[tenant.id],
+    guarantorId:'',
+    deposit:{
+      amount:2134,
+      scheme:'TDS',
+      certId:'TDS-DEMO-001234',
+      protectedAt:now()-27*86400000,
+      prescribedInfoServedAt:now()-27*86400000
+    },
+    howToRentServedAt:now()-30*86400000,
+    gasCertServedAt:now()-30*86400000,
+    epcServedAt:now()-30*86400000,
+    rightToRentCheckedAt:now()-30*86400000,
+    status:'active'
+  };
+  state.tenancies.push(ten);await idbPut('tenancies',ten);
+  let1.tenancy={id:ten.id,startDate:ten.startDate,endDate:ten.endDate,type:'AST',tenantIds:[tenant.id],deposit:{scheme:'TDS',certId:'TDS-DEMO-001234',protectedAt:ten.deposit.protectedAt}};
+  await idbPut('properties',let1);
+
+  // inventory
+  const inv={id:'in_'+uid(),firmId:state.firm.id,propertyId:let1.id,tenancyId:ten.id,ts:now()-30*86400000,
+    rooms:[
+      {name:'Living room',condition:'good',photos:0,notes:'Beige carpet (clean), white walls'},
+      {name:'Kitchen',condition:'good',photos:0,notes:'White units, integrated oven/hob/fridge'},
+      {name:'Bedroom 1',condition:'good',photos:0,notes:'Double, wood floor'},
+      {name:'Bedroom 2',condition:'fair',photos:0,notes:'Minor scuff to wall'},
+      {name:'Bathroom',condition:'good',photos:0,notes:'Shower over bath'}
+    ],
+    signedByTenantAt:now()-30*86400000};
+  state.inventories.push(inv);await idbPut('inventories',inv);
+
+  // inspections
+  const insp={id:'is_'+uid(),firmId:state.firm.id,propertyId:let1.id,tenancyId:ten.id,ts:now()-7*86400000,
+    inspectorAdviserId:state.settings.currentAdviserId,condition:'good',
+    issues:[],notes:'Routine periodic. Tenant in residence. All in order.',
+    nextDueAt:now()+83*86400000};
+  state.inspections.push(insp);await idbPut('inspections',insp);
+
+  // demo CMP entries
+  const cmp1={id:'cm_'+uid(),firmId:state.firm.id,propertyId:let1.id,tenancyId:ten.id,ts:now()-30*86400000,
+    type:'depositHeld',amount:2134,direction:'in',description:'Deposit received from Alex Doyle',balance:2134};
+  const cmp2={id:'cm_'+uid(),firmId:state.firm.id,propertyId:let1.id,tenancyId:ten.id,ts:now()-27*86400000,
+    type:'depositProtected',amount:-2134,direction:'out',description:'Deposit forwarded to TDS scheme',balance:0};
+  const cmp3={id:'cm_'+uid(),firmId:state.firm.id,propertyId:let1.id,tenancyId:ten.id,ts:now()-2*86400000,
+    type:'rent',amount:1850,direction:'in',description:'Monthly rent received',balance:1850};
+  state.clientMoney.push(cmp1,cmp2,cmp3);
+  for(const c of [cmp1,cmp2,cmp3])await idbPut('clientMoney',c);
+
+  state.activePropertyId=sale.id;
+}
+
+// ════════════════════════════════════════════════════════════════
+// Render
+// ════════════════════════════════════════════════════════════════
+function renderTabs(){
+  const n=$('#tabNav');n.innerHTML=TABS.map(t=>`<button data-id="${t.id}" class="${state.active===t.id?'active':''}" onclick="showApp('${t.id}')"><span>${t.ico}</span> <span>${t.name}</span></button>`).join('');
+}
+function render(){
+  if(!state.firm||!state.firm.setupCompletedAt){showOnboarding();return}
+  renderTabs();renderHeader();renderSidebar();renderView();
+}
+function renderHeader(){
+  const p=state.properties.find(x=>x.id===state.activePropertyId);
+  if(p){
+    $('#ppWho').textContent=p.address.line1+' · '+p.postcode;
+    $('#ppMeta').textContent=p.ref+' · '+p.listingType+' · '+p.status;
+  }else{
+    $('#ppWho').textContent='— no property —';$('#ppMeta').textContent='';
+  }
+  $('#tierBadge').textContent=state.settings.anthropicKey||state.settings.geminiKey||state.settings.openaiKey||state.settings.openrouterKey?'T3':'T0';
+  $('#tierBadge').classList.toggle('t3',!!(state.settings.anthropicKey||state.settings.geminiKey||state.settings.openaiKey||state.settings.openrouterKey));
+}
+
+function typeChips(){
+  const types=[{v:'',l:'all'},{v:'sale',l:'sale'},{v:'let-residential',l:'let res'},{v:'let-commercial',l:'let com'},{v:'management-only',l:'mgmt'}];
+  return types.map(t=>`<span class="chip ${state.filters.type===t.v?'on':''}" onclick="setFilter('type','${t.v}')">${t.l}</span>`).join('');
+}
+function statusChips(){
+  const ss=[{v:'',l:'all'},{v:'available',l:'avail'},{v:'under-offer',l:'offer'},{v:'sstc',l:'sstc'},{v:'let-agreed',l:'let-agr'},{v:'rented',l:'rented'},{v:'withdrawn',l:'wd'}];
+  return ss.map(s=>`<span class="chip ${state.filters.status===s.v?'on':''}" onclick="setFilter('status','${s.v}')">${s.l}</span>`).join('');
+}
+function setFilter(k,v){state.filters[k]=v;renderSidebar()}
+function renderSidebar(){
+  $('#filterChipsType').innerHTML=typeChips();
+  $('#filterChipsStatus').innerHTML=statusChips();
+  const ag=$('#filterAgent');
+  ag.innerHTML='<option value="">all agents</option>'+state.advisers.map(a=>`<option value="${a.id}" ${state.filters.agent===a.id?'selected':''}>${esc(a.name)}</option>`).join('');
+  const q=($('#propFilter')&&$('#propFilter').value||'').toLowerCase();
+  state.filters.q=q;state.filters.agent=ag.value;
+  const filt=state.properties.filter(p=>{
+    if(state.filters.type&&p.listingType!==state.filters.type)return false;
+    if(state.filters.status&&p.status!==state.filters.status)return false;
+    if(state.filters.agent&&p.agentId!==state.filters.agent)return false;
+    if(q){
+      const s=(p.ref+' '+p.postcode+' '+(p.address.line1||'')+' '+(p.address.city||'')).toLowerCase();
+      if(!s.includes(q))return false;
+    }
+    return true;
+  }).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  $('#propCount').textContent=state.properties.length;
+  const l=$('#propList');
+  if(!filt.length){l.innerHTML='<div class="empty-state">No properties match.<br><br>+ Add a new one.</div>';return}
+  l.innerHTML=filt.map(p=>{
+    const tCls=p.listingType==='sale'?'sale':p.listingType==='management-only'?'mgmt':'let';
+    const tLbl=p.listingType==='sale'?'sale':p.listingType==='let-residential'?'let':p.listingType==='let-commercial'?'let-c':'mgmt';
+    return `<div class="prop-card ${state.activePropertyId===p.id?'active':''}" onclick="selectProperty('${p.id}')">
+      <div class="nm">${esc(p.address.line1)}</div>
+      <div class="sub">
+        <span class="tag ${tCls}">${tLbl}</span>
+        <span>${esc(p.ref)}</span>
+        <span>${esc(p.postcode)}</span>
+        <span>${esc((p.bedrooms||'?')+'bed')}</span>
+      </div>
+      <div class="sub" style="margin-top:3px"><span class="tag dim">${esc(p.status)}</span>${p.listingType==='sale'?money(p.marketing.asking):money(p.rent.pcm)+'pcm'}</div>
+    </div>`;
+  }).join('');
+}
+function selectProperty(id){state.activePropertyId=id;state.active='property';render()}
+function showApp(t){state.active=t;render();try{if(window.matchMedia&&window.matchMedia('(max-width:880px)').matches)$('#sidebar').classList.remove('open')}catch(e){}}
+function toggleDrawer(){$('#sidebar').classList.toggle('open')}
+
+function renderView(){
+  const v=$('#view');
+  const tabs={dashboard:viewDashboard,properties:viewProperties,property:viewProperty,sales:viewSales,lettings:viewLettings,tenancies:viewTenancies,compliance:viewCompliance,cmp:viewCMP,qa:viewQA,firm:viewFirm};
+  const fn=tabs[state.active]||viewDashboard;
+  v.innerHTML=`<div class="disclaimer"><strong>Sovereign tool · informational only.</strong> FallEstate is a tool for UK estate agents and letting agents (ARLA / NAEA / TPO / PRS members). It assists with property listing, tenancy management, Client Money Protection tracking, and Tenancy Deposit Protection compliance. It is not a property portal integration or Land Registry filing system. Sovereign — client data never leaves the device. Not a substitute for qualified legal or compliance advice.</div>`+fn();
+  // post-render hooks
+  if(state.active==='property')bindPropertyTabs();
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────────────
+function viewDashboard(){
+  const props=state.properties;
+  const sales=props.filter(p=>p.listingType==='sale');
+  const lets=props.filter(p=>p.listingType!=='sale'&&p.listingType!=='management-only');
+  const sstc=sales.filter(p=>p.status==='sstc'||p.status==='under-offer');
+  const rented=lets.filter(p=>p.status==='rented');
+  const activeTen=state.tenancies.filter(t=>t.status==='active');
+  // money
+  const cmpBal=state.clientMoney.reduce((s,c)=>s+(c.direction==='in'?c.amount:c.amount),0); // amounts already signed for "out"; we summed both — but our seeds use signed amounts; recompute:
+  const cmpHeld=state.clientMoney.reduce((s,c)=>{
+    if(c.type==='depositHeld'||c.type==='rent'||c.type==='holdingDeposit')return s+Math.abs(c.amount);
+    if(c.type==='depositProtected'||c.type==='disbursementToLandlord'||c.type==='contractorPayment'||c.type==='agencyFee')return s-Math.abs(c.amount);
+    return s;
+  },0);
+  const askingTotal=sales.reduce((s,p)=>s+(+p.marketing.asking||0),0);
+  const pcmTotal=rented.reduce((s,p)=>s+(+p.rent.pcm||0),0);
+
+  // compliance flags
+  const today=now();
+  const flags=[];
+  for(const p of state.properties){
+    if(p.listingType==='let-residential'||p.listingType==='let-commercial'){
+      if(p.gasCheckExpiry){
+        const d=daysBetween(today,p.gasCheckExpiry);
+        if(d<0)flags.push({sev:'red',l:`Gas Safety expired · ${p.address.line1}`,d});
+        else if(d<30)flags.push({sev:'amber',l:`Gas Safety due in ${d}d · ${p.address.line1}`,d});
+      }
+      if(p.eicrExpiry){
+        const d=daysBetween(today,p.eicrExpiry);
+        if(d<0)flags.push({sev:'red',l:`EICR expired · ${p.address.line1}`,d});
+        else if(d<60)flags.push({sev:'amber',l:`EICR due in ${d}d · ${p.address.line1}`,d});
+      }
+      if(p.epcExpiresAt){
+        const d=daysBetween(today,p.epcExpiresAt);
+        if(d<0)flags.push({sev:'red',l:`EPC expired · ${p.address.line1}`,d});
+        else if(d<90)flags.push({sev:'amber',l:`EPC due in ${d}d · ${p.address.line1}`,d});
+      }
+    }
+  }
+  // deposit protection clocks
+  for(const t of state.tenancies){
+    if(t.status==='active'&&!t.deposit.protectedAt&&t.startDate){
+      const ds=daysBetween(new Date(t.startDate).getTime(),today);
+      if(ds>=RULES.depositProtectionDays)flags.push({sev:'red',l:`Deposit NOT protected · ${ds}d since tenancy start`});
+      else if(ds>=RULES.redDay)flags.push({sev:'red',l:`Deposit protection in ${RULES.depositProtectionDays-ds}d`});
+      else if(ds>=RULES.amberDay)flags.push({sev:'amber',l:`Deposit protection in ${RULES.depositProtectionDays-ds}d`});
+    }
+  }
+
+  return `
+  <div class="section-h"><h2>Dashboard</h2><div class="sub">${esc(state.firm.name)} · ${state.advisers.length} agent${state.advisers.length===1?'':'s'}</div></div>
+  <div class="grid">
+    <div class="card"><h3>Portfolio</h3>
+      <div class="kpi"><span class="l">Total properties</span><span class="v brass">${props.length}</span></div>
+      <div class="kpi"><span class="l">Sales listings</span><span class="v">${sales.length}</span></div>
+      <div class="kpi"><span class="l">Sales SSTC / under-offer</span><span class="v amber">${sstc.length}</span></div>
+      <div class="kpi"><span class="l">Lettings rented</span><span class="v green">${rented.length}</span></div>
+      <div class="kpi"><span class="l">Active tenancies</span><span class="v">${activeTen.length}</span></div>
+    </div>
+    <div class="card"><h3>Money</h3>
+      <div class="kpi"><span class="l">Sales asking-price book</span><span class="v">${money(askingTotal)}</span></div>
+      <div class="kpi"><span class="l">Rent under management (pcm)</span><span class="v">${money(pcmTotal)}</span></div>
+      <div class="kpi"><span class="l">Rent under management (annual)</span><span class="v brass">${money(pcmTotal*12)}</span></div>
+      <div class="kpi"><span class="l">Client money currently held</span><span class="v ${cmpHeld>0?'amber':''}">${money(cmpHeld)}</span></div>
+      <div class="kpi"><span class="l">CMP scheme</span><span class="v">${esc(state.firm.cmpScheme||'—')}</span></div>
+    </div>
+    <div class="card"><h3>Compliance flags <span class="meta">${flags.length}</span></h3>
+      ${flags.length?flags.slice(0,8).map(f=>`<div class="cert-row ${f.sev}"><div class="nm">${esc(f.l)}</div><div class="due">${f.sev.toUpperCase()}</div></div>`).join(''):'<div class="empty-state">All compliance items within window.</div>'}
+    </div>
+    <div class="card"><h3>Quick actions</h3>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="btn" onclick="newProperty()">+ New property</button>
+        <button class="btn" onclick="showApp('lettings')">View lettings pipeline</button>
+        <button class="btn" onclick="showApp('sales')">View sales pipeline</button>
+        <button class="btn" onclick="showApp('compliance')">Compliance tracker</button>
+        <button class="btn" onclick="showApp('cmp')">Client Money ledger</button>
+        <button class="btn ghost" onclick="openModal('exportAudit')">Export audit chain</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── PROPERTIES (list view) ──────────────────────────────────────────
+function viewProperties(){
+  const rows=state.properties.map(p=>{
+    const agent=state.advisers.find(a=>a.id===p.agentId);
+    return `<tr class="clickable" onclick="selectProperty('${p.id}')">
+      <td><strong>${esc(p.ref)}</strong></td>
+      <td>${esc(p.address.line1)} · ${esc(p.postcode)}</td>
+      <td>${esc(p.listingType)}</td>
+      <td>${esc(p.status)}</td>
+      <td>${p.bedrooms||'—'}</td>
+      <td class="r">${p.listingType==='sale'?money(p.marketing.asking):money(p.rent.pcm)+'pcm'}</td>
+      <td>${agent?esc(agent.name):'—'}</td>
+      <td>${dateStr(p.updatedAt)}</td>
+    </tr>`;
+  }).join('');
+  return `
+  <div class="section-h"><h2>Properties</h2><div class="actions"><button class="btn primary" onclick="newProperty()">+ New property</button></div></div>
+  <div class="card">
+    <table>
+      <thead><tr><th>Ref</th><th>Address</th><th>Type</th><th>Status</th><th>Bed</th><th class="r">Price</th><th>Agent</th><th>Updated</th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="8" style="text-align:center;color:var(--cream-muted);padding:30px">No properties. Add one to begin.</td></tr>'}</tbody>
+    </table>
+  </div>`;
+}
+
+// ── PROPERTY DETAIL ─────────────────────────────────────────────────
+let propertyTab='overview';
+function viewProperty(){
+  const p=state.properties.find(x=>x.id===state.activePropertyId);
+  if(!p)return `<div class="empty-state">No property selected. Choose one from the sidebar.</div>`;
+  const isLet=p.listingType==='let-residential'||p.listingType==='let-commercial';
+  const tabs=['overview','marketing','viewings','offers'];
+  if(isLet)tabs.push('tenancy','inventory','inspections');
+  tabs.push('documents','timeline');
+  const tabsHtml=tabs.map(t=>`<button class="tool-btn ${propertyTab===t?'primary':''}" onclick="setPTab('${t}')">${t}</button>`).join('');
+
+  let body='';
+  if(propertyTab==='overview')body=ptOverview(p);
+  else if(propertyTab==='marketing')body=ptMarketing(p);
+  else if(propertyTab==='viewings')body=ptViewings(p);
+  else if(propertyTab==='offers')body=ptOffers(p);
+  else if(propertyTab==='tenancy')body=ptTenancy(p);
+  else if(propertyTab==='inventory')body=ptInventory(p);
+  else if(propertyTab==='inspections')body=ptInspections(p);
+  else if(propertyTab==='documents')body=ptDocs(p);
+  else if(propertyTab==='timeline')body=ptTimeline(p);
+
+  const pipe=isLet?pipeLetting(p):pipeSale(p);
+  return `
+  <div class="section-h">
+    <div><h2>${esc(p.address.line1)} <span style="font-family:var(--mono);font-size:11px;color:var(--cream-muted)">${esc(p.ref)}</span></h2><div class="sub">${esc(p.address.city||'')} · ${esc(p.postcode)} · ${esc(p.listingType)} · ${esc(p.status)}</div></div>
+    <div class="actions">
+      <button class="btn ghost" onclick="editProperty('${p.id}')">edit</button>
+      <button class="btn danger" onclick="deleteProperty('${p.id}')">archive</button>
+    </div>
+  </div>
+  ${pipe}
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;padding:6px;background:var(--void-2);border:1px solid var(--line);border-radius:4px">${tabsHtml}</div>
+  ${body}`;
+}
+function setPTab(t){propertyTab=t;render()}
+function bindPropertyTabs(){}
+
+function pipeSale(p){
+  const stages=['listed','viewings','offers','sstc','exchanged','completed'];
+  const map={available:0,'under-offer':2,sstc:3,exchanged:4,completed:5,withdrawn:0};
+  const curr=map[p.status]??0;
+  return `<div class="pipe">${stages.map((s,i)=>`<div class="stage ${i<curr?'done':i===curr?'curr':''}">${s}</div>`).join('')}</div>`;
+}
+function pipeLetting(p){
+  const stages=['listed','viewings','offers','holding','references','signing','protected','keys'];
+  // estimate current
+  let curr=0;
+  if(p.viewings&&p.viewings.length)curr=1;
+  if(p.offers&&p.offers.length)curr=2;
+  const ten=state.tenancies.find(t=>t.propertyId===p.id&&t.status==='active');
+  if(p.rent.holdingDeposit>0||(p.offers||[]).some(o=>o.status==='accepted'))curr=3;
+  if(ten)curr=5;
+  if(ten&&ten.deposit&&ten.deposit.protectedAt)curr=6;
+  if(p.status==='rented')curr=7;
+  return `<div class="pipe">${stages.map((s,i)=>`<div class="stage ${i<curr?'done':i===curr?'curr':''}">${s}</div>`).join('')}</div>`;
+}
+
+function ptOverview(p){
+  const vendor=state.clients.find(c=>c.id===(p.vendor[0]||''));
+  const landlord=state.clients.find(c=>c.id===(p.landlord[0]||''));
+  return `
+  <div class="grid">
+    <div class="card"><h3>Property</h3>
+      <div class="kpi"><span class="l">Reference</span><span class="v brass">${esc(p.ref)}</span></div>
+      <div class="kpi"><span class="l">Type</span><span class="v">${esc(p.propertyType||'—')}</span></div>
+      <div class="kpi"><span class="l">Tenure</span><span class="v">${esc(p.tenure||'—')}</span></div>
+      <div class="kpi"><span class="l">Bedrooms / bathrooms</span><span class="v">${p.bedrooms||'—'} / ${p.bathrooms||'—'}</span></div>
+      <div class="kpi"><span class="l">EPC rating</span><span class="v">${esc(p.epcRating||'—')}</span></div>
+      <div class="kpi"><span class="l">Status</span><span class="v">${esc(p.status)}</span></div>
+    </div>
+    <div class="card"><h3>Address</h3>
+      <div class="kpi"><span class="l">Line 1</span><span class="v">${esc(p.address.line1||'')}</span></div>
+      <div class="kpi"><span class="l">Line 2</span><span class="v">${esc(p.address.line2||'—')}</span></div>
+      <div class="kpi"><span class="l">City</span><span class="v">${esc(p.address.city||'')}</span></div>
+      <div class="kpi"><span class="l">Region</span><span class="v">${esc(p.address.region||'England')}</span></div>
+      <div class="kpi"><span class="l">Postcode</span><span class="v">${esc(p.postcode)}</span></div>
+    </div>
+    <div class="card"><h3>${p.listingType==='sale'?'Vendor':'Landlord'}</h3>
+      ${(p.listingType==='sale'?vendor:landlord)?`
+        <div class="kpi"><span class="l">Name</span><span class="v">${esc(((p.listingType==='sale'?vendor:landlord).firstName||'')+' '+((p.listingType==='sale'?vendor:landlord).lastName||''))}</span></div>
+        <div class="kpi"><span class="l">Email</span><span class="v">${esc((p.listingType==='sale'?vendor:landlord).email||'—')}</span></div>
+        <div class="kpi"><span class="l">Phone</span><span class="v">${esc((p.listingType==='sale'?vendor:landlord).phone||'—')}</span></div>
+        <div class="kpi"><span class="l">KYC</span><span class="v ${(p.listingType==='sale'?vendor:landlord).kyc&&(p.listingType==='sale'?vendor:landlord).kyc.status==='verified'?'green':'amber'}">${esc(((p.listingType==='sale'?vendor:landlord).kyc||{}).status||'pending')}</span></div>
+      `:`<div class="empty-state">No ${p.listingType==='sale'?'vendor':'landlord'} linked.<br><br><button class="btn sm" onclick="editProperty('${p.id}')">Add</button></div>`}
+    </div>
+    ${p.listingType==='sale'?`
+    <div class="card"><h3>Sale price</h3>
+      <div class="kpi"><span class="l">Asking</span><span class="v brass">${money(p.marketing.asking)}</span></div>
+      <div class="kpi"><span class="l">Listed</span><span class="v">${dateStr(p.marketing.listedAt)}</span></div>
+      <div class="kpi"><span class="l">Days on market</span><span class="v">${p.marketing.listedAt?daysBetween(p.marketing.listedAt,now()):'—'}</span></div>
+      <div class="kpi"><span class="l">Viewings</span><span class="v">${(p.viewings||[]).length}</span></div>
+      <div class="kpi"><span class="l">Offers</span><span class="v">${(p.offers||[]).length}</span></div>
+    </div>`:`
+    <div class="card"><h3>Rent</h3>
+      <div class="kpi"><span class="l">Rent pcm</span><span class="v brass">${money(p.rent.pcm)}</span></div>
+      <div class="kpi"><span class="l">Annual rent</span><span class="v">${money(p.rent.pcm*12)}</span></div>
+      <div class="kpi"><span class="l">Deposit cap</span><span class="v">${money(depositCap(p.rent.pcm))} <span style="color:var(--cream-muted);font-size:10px">(${p.rent.pcm*12>=RULES.annualRentThresholdHigher?6:5}w)</span></span></div>
+      <div class="kpi"><span class="l">Holding deposit cap</span><span class="v">${money(holdingCap(p.rent.pcm))} <span style="color:var(--cream-muted);font-size:10px">(1w)</span></span></div>
+      <div class="kpi"><span class="l">Holding deposit held</span><span class="v">${money(p.rent.holdingDeposit)}</span></div>
+    </div>`}
+  </div>`;
+}
+function depositCap(pcm){return Math.round(((pcm||0)*12/52)*((pcm||0)*12>=RULES.annualRentThresholdHigher?6:5))}
+function holdingCap(pcm){return Math.round((pcm||0)*12/52)}
+
+function ptMarketing(p){
+  return `
+  <div class="card"><h3>Marketing</h3>
+    <div class="row">
+      <div class="field"><label>Asking / rent</label><input type="number" id="m_ask" value="${p.listingType==='sale'?p.marketing.asking:p.rent.pcm}"></div>
+      <div class="field"><label>Listed on</label><input id="m_listed" placeholder="Rightmove, Zoopla, OnTheMarket" value="${esc((p.marketing.listedOn||[]).join(', '))}"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Listed at</label><input type="date" id="m_date" value="${p.marketing.listedAt?dateStr(p.marketing.listedAt):''}"></div>
+      <div class="field"><label>Status</label>
+        <select id="m_status">
+          ${['available','under-offer','sstc','exchanged','completed','let-agreed','rented','withdrawn'].map(s=>`<option value="${s}" ${p.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <button class="btn primary sm" onclick="updateMarketing('${p.id}')">Save</button>
+  </div>
+  <div class="card" style="margin-top:14px"><h3>Price history</h3>
+    ${(p.marketing.priceHistory||[]).length?
+      `<table><thead><tr><th>Date</th><th class="r">Price</th></tr></thead><tbody>${p.marketing.priceHistory.map(h=>`<tr><td>${dateStr(h.ts)}</td><td class="r">${money(h.price)}</td></tr>`).join('')}</tbody></table>`
+      :'<div class="empty-state">No price changes yet.</div>'}
+  </div>`;
+}
+async function updateMarketing(id){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  const newPrice=+$('#m_ask').value||0;
+  if(p.listingType==='sale'){
+    if(newPrice!==p.marketing.asking){p.marketing.priceHistory.push({ts:now(),price:newPrice});p.marketing.asking=newPrice}
+  }else{p.rent.pcm=newPrice}
+  p.marketing.listedOn=$('#m_listed').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const d=$('#m_date').value;if(d)p.marketing.listedAt=new Date(d).getTime();
+  p.status=$('#m_status').value;
+  await saveProperty(p);await auditPush('property.marketing.updated','Marketing fields updated',{ref:p.ref,status:p.status},{propertyId:p.id});
+  toast('Saved');render();
+}
+
+function ptViewings(p){
+  const rows=(p.viewings||[]).slice().sort((a,b)=>b.ts-a.ts).map(v=>`
+    <tr><td>${dateStr(v.ts)}</td><td>${esc(v.byName||'—')}</td><td>${esc(v.outcome||'—')}</td><td>${esc(v.feedback||'—')}</td>
+    <td class="r"><button class="btn sm danger" onclick="delViewing('${p.id}','${v.id}')">×</button></td></tr>`).join('');
+  return `
+  <div class="card"><h3>Viewings <span class="meta">${(p.viewings||[]).length}</span></h3>
+    <div class="row r3">
+      <div class="field"><label>Date</label><input type="date" id="v_date" value="${dateStr(now())}"></div>
+      <div class="field"><label>Viewer name</label><input id="v_name"></div>
+      <div class="field"><label>Outcome</label>
+        <select id="v_out"><option value="interested">interested</option><option value="not-proceeding">not-proceeding</option><option value="applied">applied</option><option value="callback">callback</option></select>
+      </div>
+    </div>
+    <div class="field"><label>Feedback</label><textarea id="v_fb" rows="2"></textarea></div>
+    <button class="btn primary sm" onclick="addViewing('${p.id}')" style="margin-top:8px">+ Log viewing</button>
+    <table style="margin-top:14px"><thead><tr><th>Date</th><th>Viewer</th><th>Outcome</th><th>Feedback</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="5" style="text-align:center;color:var(--cream-muted);padding:18px">No viewings logged.</td></tr>'}</tbody></table>
+  </div>`;
+}
+async function addViewing(id){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  const v={id:'vw_'+uid(),ts:new Date($('#v_date').value||dateStr(now())).getTime(),byClientId:'',byName:$('#v_name').value.trim(),feedback:$('#v_fb').value.trim(),outcome:$('#v_out').value};
+  if(!v.byName){toast('Name required');return}
+  p.viewings=p.viewings||[];p.viewings.push(v);p.timeline=p.timeline||[];p.timeline.push({ts:v.ts,event:`Viewing: ${v.byName} (${v.outcome})`,by:state.settings.currentAdviserId});
+  await saveProperty(p);await auditPush('viewing.scheduled','Viewing logged',{viewerName:v.byName,outcome:v.outcome},{propertyId:p.id});
+  meshBroadcast('viewing.scheduled',{propertyId:p.id,viewing:v});
+  render();
+}
+async function delViewing(id,vid){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  p.viewings=(p.viewings||[]).filter(v=>v.id!==vid);await saveProperty(p);render();
+}
+
+function ptOffers(p){
+  const rows=(p.offers||[]).slice().sort((a,b)=>b.ts-a.ts).map(o=>`
+    <tr><td>${dateStr(o.ts)}</td><td>${esc(o.fromName||'—')}</td><td class="r">${money(o.amount)}</td><td>${esc(o.conditions||'—')}</td><td>${esc(o.status)}</td>
+    <td class="r">
+      ${o.status==='pending'?`<button class="btn sm" onclick="acceptOffer('${p.id}','${o.id}')">Accept</button>`:''}
+      <button class="btn sm danger" onclick="delOffer('${p.id}','${o.id}')">×</button>
+    </td></tr>`).join('');
+  return `
+  <div class="card"><h3>Offers <span class="meta">${(p.offers||[]).length}</span></h3>
+    <div class="row r3">
+      <div class="field"><label>Date</label><input type="date" id="o_date" value="${dateStr(now())}"></div>
+      <div class="field"><label>From (name)</label><input id="o_name"></div>
+      <div class="field"><label>Amount £</label><input type="number" id="o_amt"></div>
+    </div>
+    <div class="field"><label>Conditions</label><input id="o_cond" placeholder="Subject to mortgage / survey / chain"></div>
+    <button class="btn primary sm" onclick="addOffer('${p.id}')" style="margin-top:8px">+ Log offer</button>
+    <table style="margin-top:14px"><thead><tr><th>Date</th><th>From</th><th class="r">Amount</th><th>Conditions</th><th>Status</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:var(--cream-muted);padding:18px">No offers received.</td></tr>'}</tbody></table>
+    ${p.listingType==='sale'?`<button class="btn" onclick="genMemo('${p.id}')" style="margin-top:14px">Generate Memorandum of Sale</button>`:''}
+  </div>`;
+}
+async function addOffer(id){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  const o={id:'of_'+uid(),ts:new Date($('#o_date').value||dateStr(now())).getTime(),fromClientId:'',fromName:$('#o_name').value.trim(),amount:+$('#o_amt').value||0,conditions:$('#o_cond').value.trim(),status:'pending'};
+  if(!o.fromName||!o.amount){toast('Name + amount required');return}
+  p.offers=p.offers||[];p.offers.push(o);p.timeline=p.timeline||[];p.timeline.push({ts:o.ts,event:`Offer: ${money(o.amount)} from ${o.fromName}`,by:state.settings.currentAdviserId});
+  await saveProperty(p);await auditPush('offer.received','Offer logged',{from:o.fromName,amount:o.amount},{propertyId:p.id});
+  render();
+}
+async function acceptOffer(id,oid){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  const o=p.offers.find(x=>x.id===oid);if(!o)return;
+  o.status='accepted';
+  for(const x of p.offers)if(x.id!==oid&&x.status==='pending')x.status='declined';
+  if(p.listingType==='sale')p.status='under-offer';
+  else{p.status='let-agreed';p.rent.holdingDeposit=Math.min(holdingCap(p.rent.pcm),p.rent.holdingDeposit||holdingCap(p.rent.pcm))}
+  p.timeline.push({ts:now(),event:`Offer accepted: ${money(o.amount)} (${o.fromName})`,by:state.settings.currentAdviserId});
+  await saveProperty(p);await auditPush('offer.accepted','Offer accepted',{from:o.fromName,amount:o.amount},{propertyId:p.id});
+  if(p.listingType==='sale')meshBroadcast('property.sstc',p);
+  toast('Offer accepted');render();
+}
+async function delOffer(id,oid){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  p.offers=(p.offers||[]).filter(o=>o.id!==oid);await saveProperty(p);render();
+}
+function genMemo(id){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  const accepted=(p.offers||[]).find(o=>o.status==='accepted');
+  if(!accepted){toast('No accepted offer');return}
+  const vendor=state.clients.find(c=>c.id===(p.vendor[0]||''));
+  const memo=`MEMORANDUM OF SALE
+Issued: ${dateStr(now())}
+Reference: ${p.ref}
+
+Property: ${p.address.line1}, ${p.address.city}, ${p.postcode}
+Tenure: ${p.propertyType||'—'} · ${p.tenure||'—'}
+${p.bedrooms||''} bed · ${p.bathrooms||''} bath · EPC ${p.epcRating||'?'}
+
+Sale price: ${money(accepted.amount)}
+Conditions: ${accepted.conditions||'subject to contract'}
+
+VENDOR
+${vendor?(vendor.firstName+' '+vendor.lastName):'(not on file)'}
+${vendor?(vendor.address.line1+', '+vendor.address.city+', '+vendor.address.postcode):''}
+Email: ${vendor?vendor.email:''}
+
+PURCHASER
+${accepted.fromName}
+
+AGENT
+${state.firm.name} · ${state.firm.tradingName||''}
+${state.firm.professionalBody||''} / ${state.firm.redressScheme||''} member
+
+Subject to contract. Not legally binding. Each party to instruct conveyancers within 7 working days.`;
+  openModal('memo',{html:`<pre style="font-family:var(--mono);font-size:11px;background:var(--ink);padding:14px;border-radius:3px;white-space:pre-wrap">${esc(memo)}</pre><div class="actions"><button class="btn ghost" onclick="navigator.clipboard.writeText(\`${memo.replace(/`/g,"\\`")}\`);toast('Copied')">Copy</button><button class="btn primary" onclick="closeModal()">Close</button></div>`,title:'Memorandum of Sale'});
+}
+
+function ptTenancy(p){
+  const t=state.tenancies.find(t=>t.propertyId===p.id&&t.status==='active');
+  if(!t){
+    return `<div class="card"><h3>Tenancy</h3>
+      <div class="empty-state">No active tenancy.</div>
+      <button class="btn primary" onclick="newTenancy('${p.id}')">+ Create tenancy</button>
+    </div>`;
+  }
+  const tenants=t.tenantIds.map(id=>state.clients.find(c=>c.id===id)).filter(Boolean);
+  const dDays=t.deposit.protectedAt?daysBetween(new Date(t.startDate).getTime(),t.deposit.protectedAt):null;
+  const dStatus=t.deposit.protectedAt?(dDays<=30?'within window':'late'):'NOT protected';
+  return `
+  <div class="grid">
+    <div class="card"><h3>Tenancy</h3>
+      <div class="kpi"><span class="l">Type</span><span class="v">${esc(t.type)}</span></div>
+      <div class="kpi"><span class="l">Start / end</span><span class="v">${t.startDate} → ${t.endDate}</span></div>
+      <div class="kpi"><span class="l">Term</span><span class="v">${t.termMonths||'—'}mo</span></div>
+      <div class="kpi"><span class="l">Rent</span><span class="v brass">${money(t.rent.pcm)} ${t.rent.frequency}</span></div>
+      <div class="kpi"><span class="l">Rent due day</span><span class="v">${t.rent.dayDue||'—'}</span></div>
+      <div class="kpi"><span class="l">Status</span><span class="v ${t.status==='active'?'green':''}">${esc(t.status)}</span></div>
+    </div>
+    <div class="card"><h3>Deposit · TDP</h3>
+      <div class="kpi"><span class="l">Amount</span><span class="v">${money(t.deposit.amount)}</span></div>
+      <div class="kpi"><span class="l">Scheme</span><span class="v">${esc(t.deposit.scheme||'—')}</span></div>
+      <div class="kpi"><span class="l">Certificate</span><span class="v">${esc(t.deposit.certId||'—')}</span></div>
+      <div class="kpi"><span class="l">Protected at</span><span class="v ${t.deposit.protectedAt?'green':'red'}">${dateStr(t.deposit.protectedAt)}</span></div>
+      <div class="kpi"><span class="l">Prescribed Info served</span><span class="v ${t.deposit.prescribedInfoServedAt?'green':'red'}">${dateStr(t.deposit.prescribedInfoServedAt)}</span></div>
+      <div class="kpi"><span class="l">Status</span><span class="v ${dStatus==='within window'?'green':'red'}">${dStatus}</span></div>
+      ${!t.deposit.protectedAt?`<button class="btn primary sm" onclick="protectDeposit('${t.id}')" style="margin-top:8px">Mark protected</button>`:''}
+    </div>
+    <div class="card"><h3>Tenant${tenants.length>1?'s':''}</h3>
+      ${tenants.map(c=>`<div class="kpi"><span class="l">${esc(c.firstName+' '+c.lastName)}</span><span class="v">${esc(c.email||c.phone||'—')}</span></div>
+      <div class="kpi"><span class="l">Right-to-Rent checked</span><span class="v ${c.rightToRentCheckedAt?'green':'red'}">${dateStr(c.rightToRentCheckedAt)}</span></div>
+      <div class="kpi"><span class="l">References</span><span class="v ${c.referencesObtained?'green':'amber'}">${c.referencesObtained?'obtained':'pending'}</span></div>`).join('')}
+      ${t.guarantorId?`<div class="kpi"><span class="l">Guarantor</span><span class="v">${esc((state.clients.find(c=>c.id===t.guarantorId)||{}).firstName||'—')}</span></div>`:''}
+    </div>
+    <div class="card"><h3>Notices served (landlord obligations)</h3>
+      <div class="kpi"><span class="l">How to Rent</span><span class="v ${t.howToRentServedAt?'green':'red'}">${dateStr(t.howToRentServedAt)}</span></div>
+      <div class="kpi"><span class="l">Gas Safety (CP12)</span><span class="v ${t.gasCertServedAt?'green':'red'}">${dateStr(t.gasCertServedAt)}</span></div>
+      <div class="kpi"><span class="l">EPC</span><span class="v ${t.epcServedAt?'green':'red'}">${dateStr(t.epcServedAt)}</span></div>
+      <div class="kpi"><span class="l">Right-to-Rent (England)</span><span class="v ${t.rightToRentCheckedAt?'green':'red'}">${dateStr(t.rightToRentCheckedAt)}</span></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px"><h3>Section 21 · accelerated possession</h3>
+    ${s21PreChecksHtml(t,p)}
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ${s21Allowed(t,p)?'primary':''}" ${s21Allowed(t,p)?'':'disabled'} onclick="issueS21('${t.id}')">Issue Section 21 notice</button>
+      <button class="btn" onclick="openModal('s8',{tenancyId:'${t.id}'})">Issue Section 8 notice</button>
+    </div>
+  </div>`;
+}
+function s21PreChecksHtml(t,p){
+  const checks=[
+    {k:'depositProtected',l:'Deposit protected with TDS/DPS/mydeposits',ok:!!t.deposit.protectedAt},
+    {k:'prescribedInfoServed',l:'Prescribed Information served on tenant',ok:!!t.deposit.prescribedInfoServedAt},
+    {k:'gasSafetyServed',l:'Gas Safety certificate (CP12) served',ok:!!t.gasCertServedAt},
+    {k:'epcServed',l:'EPC served before tenancy',ok:!!t.epcServedAt},
+    {k:'howToRentServed',l:'How to Rent booklet served (English tenancies)',ok:!!t.howToRentServedAt},
+    {k:'epcEorAbove',l:'EPC rating E or above',ok:p.epcRating&&'ABCDE'.includes(p.epcRating)}
+  ];
+  return checks.map(c=>`<div class="precheck ${c.ok?'pass':'fail'}"><span class="ico">${c.ok?'✓':'✗'}</span><span class="lbl">${c.l}</span><span class="meta">${c.ok?'OK':'BLOCKS'}</span></div>`).join('')+
+    `<div class="kpi" style="margin-top:8px"><span class="l">Section 21 abolition status</span><span class="v amber">Renters Rights Bill — once enacted, S21 no-fault evictions abolished. Currently still in force.</span></div>`;
+}
+function s21Allowed(t,p){
+  return !!t.deposit.protectedAt && !!t.deposit.prescribedInfoServedAt && !!t.gasCertServedAt && !!t.epcServedAt && !!t.howToRentServedAt && p.epcRating && 'ABCDE'.includes(p.epcRating);
+}
+async function issueS21(tid){
+  const t=state.tenancies.find(x=>x.id===tid);if(!t)return;
+  const p=state.properties.find(x=>x.id===t.propertyId);
+  if(!s21Allowed(t,p)){toast('Pre-checks fail — cannot issue');return}
+  await auditPush('tenancy.s21.issued','Section 21 notice issued; 2 months minimum notice required',{tenancyId:tid,propertyRef:p.ref},{propertyId:p.id,tenancyId:tid});
+  const tenant=state.clients.find(c=>c.id===t.tenantIds[0])||{};
+  const text=`SECTION 21 NOTICE (Housing Act 1988, s.21)
+Issued: ${dateStr(now())}
+To: ${(tenant.firstName||'')+' '+(tenant.lastName||'')}
+Property: ${p.address.line1}, ${p.postcode}
+By: ${state.firm.name}, agent for landlord
+
+Take notice that the landlord requires possession of the above premises after ${dateStr(now()+62*86400000)} (minimum 2 calendar months from service).
+This notice is given under Form 6A (England) / equivalent.
+
+Pre-conditions confirmed at issuance:
+- Deposit protected with ${t.deposit.scheme} (cert ${t.deposit.certId})
+- Prescribed Information served ${dateStr(t.deposit.prescribedInfoServedAt)}
+- Gas Safety certificate served ${dateStr(t.gasCertServedAt)}
+- EPC served ${dateStr(t.epcServedAt)}
+- How to Rent booklet served ${dateStr(t.howToRentServedAt)}
+
+Tenant rights: seek free advice from Citizens Advice or Shelter.`;
+  openModal('s21',{title:'Section 21 notice issued',html:`<pre style="font-family:var(--mono);font-size:11px;background:var(--ink);padding:14px;border-radius:3px;white-space:pre-wrap">${esc(text)}</pre><div class="actions"><button class="btn ghost" onclick="navigator.clipboard.writeText(\`${text.replace(/`/g,"\\`")}\`);toast('Copied')">Copy</button><button class="btn primary" onclick="closeModal()">Close</button></div>`});
+}
+async function protectDeposit(tid){
+  const t=state.tenancies.find(x=>x.id===tid);if(!t)return;
+  t.deposit.protectedAt=now();t.deposit.prescribedInfoServedAt=now();
+  if(!t.deposit.certId)t.deposit.certId=t.deposit.scheme+'-'+uid().slice(0,8).toUpperCase();
+  await saveTenancy(t);
+  // CMP entry
+  const cm={id:'cm_'+uid(),firmId:state.firm.id,propertyId:t.propertyId,tenancyId:t.id,ts:now(),type:'depositProtected',amount:-t.deposit.amount,direction:'out',description:'Deposit forwarded to '+t.deposit.scheme};
+  state.clientMoney.push(cm);await idbPut('clientMoney',cm);
+  await auditPush('deposit.protected','Deposit protected with '+t.deposit.scheme,{certId:t.deposit.certId,amount:t.deposit.amount},{propertyId:t.propertyId,tenancyId:t.id});
+  meshBroadcast('deposit.protected',{tenancyId:t.id,scheme:t.deposit.scheme,certId:t.deposit.certId});
+  meshBroadcast('clientMoney.entry',cm);
+  toast('Deposit marked protected');render();
+}
+
+function ptInventory(p){
+  const inv=state.inventories.filter(i=>i.propertyId===p.id).slice().sort((a,b)=>b.ts-a.ts)[0];
+  if(!inv){
+    return `<div class="card"><h3>Inventory</h3>
+      <div class="empty-state">No inventory yet.</div>
+      <button class="btn primary" onclick="newInventory('${p.id}')">+ New inventory</button>
+    </div>`;
+  }
+  return `<div class="card"><h3>Inventory · ${dateStr(inv.ts)}</h3>
+    <div class="kpi"><span class="l">Signed by tenant</span><span class="v ${inv.signedByTenantAt?'green':'amber'}">${dateStr(inv.signedByTenantAt)}</span></div>
+    <table><thead><tr><th>Room</th><th>Condition</th><th>Photos</th><th>Notes</th></tr></thead>
+    <tbody>${inv.rooms.map(r=>`<tr><td><strong>${esc(r.name)}</strong></td><td>${esc(r.condition)}</td><td>${r.photos||0}</td><td>${esc(r.notes||'')}</td></tr>`).join('')}</tbody></table>
+    <button class="btn sm" onclick="newInventory('${p.id}')" style="margin-top:10px">+ New version</button>
+  </div>`;
+}
+async function newInventory(pid){
+  const rooms=prompt('Rooms (comma-separated)','Living room, Kitchen, Bedroom 1, Bathroom');if(!rooms)return;
+  const inv={id:'in_'+uid(),firmId:state.firm.id,propertyId:pid,tenancyId:'',ts:now(),
+    rooms:rooms.split(',').map(r=>({name:r.trim(),condition:'good',photos:0,notes:''})),signedByTenantAt:null};
+  state.inventories.push(inv);await idbPut('inventories',inv);
+  await auditPush('inventory.created','New inventory drafted',{rooms:inv.rooms.length},{propertyId:pid});
+  toast('Inventory created');render();
+}
+
+function ptInspections(p){
+  const list=state.inspections.filter(i=>i.propertyId===p.id).slice().sort((a,b)=>b.ts-a.ts);
+  return `<div class="card"><h3>Periodic inspections <span class="meta">${list.length}</span></h3>
+    <table><thead><tr><th>Date</th><th>Condition</th><th>Issues</th><th>Next due</th><th>Notes</th></tr></thead>
+    <tbody>${list.length?list.map(i=>`<tr><td>${dateStr(i.ts)}</td><td>${esc(i.condition)}</td><td>${(i.issues||[]).length}</td><td>${dateStr(i.nextDueAt)}</td><td>${esc(i.notes||'')}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--cream-muted);padding:18px">No inspections logged.</td></tr>'}</tbody></table>
+    <button class="btn primary sm" onclick="newInspection('${p.id}')" style="margin-top:10px">+ Log inspection (quarterly default)</button>
+  </div>`;
+}
+async function newInspection(pid){
+  const insp={id:'is_'+uid(),firmId:state.firm.id,propertyId:pid,tenancyId:'',ts:now(),
+    inspectorAdviserId:state.settings.currentAdviserId,condition:'good',issues:[],notes:prompt('Inspection notes','Routine periodic — all in order')||'',
+    nextDueAt:now()+90*86400000};
+  state.inspections.push(insp);await idbPut('inspections',insp);
+  await auditPush('inspection.logged','Periodic inspection logged',{condition:insp.condition,nextDueAt:insp.nextDueAt},{propertyId:pid});
+  toast('Inspection logged');render();
+}
+
+function ptDocs(p){
+  return `<div class="card"><h3>Documents</h3>
+    <div class="empty-state">Document store (lightweight register). In sovereign mode, blob storage is off by default; record references only.</div>
+    <div class="row">
+      <div class="field"><label>Title</label><input id="d_t" placeholder="EPC report 2024-04"></div>
+      <div class="field"><label>Type</label>
+        <select id="d_ty"><option>EPC</option><option>Gas Safety (CP12)</option><option>EICR</option><option>Tenancy agreement</option><option>Inventory</option><option>Property questionnaire (TA6)</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="field"><label>Reference / location</label><input id="d_r" placeholder="filing cabinet ref or URL"></div>
+    <button class="btn primary sm" onclick="addDoc('${p.id}')" style="margin-top:8px">+ Add reference</button>
+    ${(p.docs||[]).length?`<table style="margin-top:14px"><thead><tr><th>Date</th><th>Type</th><th>Title</th><th>Ref</th></tr></thead><tbody>${p.docs.map(d=>`<tr><td>${dateStr(d.ts)}</td><td>${esc(d.type)}</td><td>${esc(d.title)}</td><td>${esc(d.ref)}</td></tr>`).join('')}</tbody></table>`:''}
+  </div>`;
+}
+async function addDoc(id){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  const d={id:'doc_'+uid(),ts:now(),title:$('#d_t').value.trim(),type:$('#d_ty').value,ref:$('#d_r').value.trim()};
+  if(!d.title){toast('Title required');return}
+  p.docs=p.docs||[];p.docs.push(d);await saveProperty(p);render();
+}
+
+function ptTimeline(p){
+  const tl=(p.timeline||[]).slice().sort((a,b)=>b.ts-a.ts);
+  return `<div class="card"><h3>Timeline</h3>
+    ${tl.length?tl.map(e=>{const ag=state.advisers.find(a=>a.id===e.by);return `<div class="kpi"><span class="l">${dateStr(e.ts)} <span style="color:var(--cream-muted);font-size:10px;font-family:var(--mono)">${ag?esc(ag.name):''}</span></span><span class="v">${esc(e.event)}</span></div>`}).join(''):'<div class="empty-state">No events yet.</div>'}
+  </div>`;
+}
+
+// ── SALES PIPELINE ──────────────────────────────────────────────────
+function viewSales(){
+  const sales=state.properties.filter(p=>p.listingType==='sale');
+  const cols=[
+    {k:'available',l:'Listed'},
+    {k:'under-offer',l:'Under offer'},
+    {k:'sstc',l:'SSTC'},
+    {k:'exchanged',l:'Exchanged'},
+    {k:'completed',l:'Completed'}
+  ];
+  return `<div class="section-h"><h2>Sales pipeline</h2><div class="sub">${sales.length} sales listings</div></div>
+  <div class="grid">
+  ${cols.map(c=>{
+    const items=sales.filter(p=>p.status===c.k);
+    return `<div class="card"><h3>${c.l} <span class="meta">${items.length}</span></h3>
+      ${items.length?items.map(p=>`<div class="prop-card" onclick="selectProperty('${p.id}')"><div class="nm">${esc(p.address.line1)}</div><div class="sub"><span>${esc(p.ref)}</span><span>${money(p.marketing.asking)}</span></div></div>`).join(''):'<div class="empty-state">—</div>'}
+      ${c.k!=='completed'?`<div style="margin-top:8px;display:flex;gap:4px">${items.map(p=>{
+        const next={available:'under-offer','under-offer':'sstc',sstc:'exchanged',exchanged:'completed'}[c.k];
+        return next?`<button class="btn sm" onclick="moveSale('${p.id}','${next}')" title="advance ${p.ref}">${p.ref} →</button>`:'';
+      }).join('')}</div>`:''}
+    </div>`;
+  }).join('')}
+  </div>`;
+}
+async function moveSale(id,toStatus){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  p.status=toStatus;p.timeline=p.timeline||[];p.timeline.push({ts:now(),event:`Status → ${toStatus}`,by:state.settings.currentAdviserId});
+  await saveProperty(p);await auditPush('property.status.changed','Sales pipeline advanced',{ref:p.ref,status:toStatus},{propertyId:p.id});
+  if(toStatus==='sstc')meshBroadcast('property.sstc',p);
+  if(toStatus==='completed')meshBroadcast('property.completed',p);
+  toast(p.ref+' → '+toStatus);render();
+}
+
+// ── LETTINGS PIPELINE ───────────────────────────────────────────────
+function viewLettings(){
+  const lets=state.properties.filter(p=>p.listingType==='let-residential'||p.listingType==='let-commercial');
+  // pipeline by computed stage
+  const stages=['listed','viewings','offers','holdingDeposit','referencing','signing','protected','keys'];
+  const buckets={};stages.forEach(s=>buckets[s]=[]);
+  for(const p of lets){
+    const ten=state.tenancies.find(t=>t.propertyId===p.id&&t.status==='active');
+    let s='listed';
+    if((p.viewings||[]).length)s='viewings';
+    if((p.offers||[]).length)s='offers';
+    if((p.offers||[]).some(o=>o.status==='accepted'))s='holdingDeposit';
+    if(ten)s='signing';
+    if(ten&&ten.deposit&&ten.deposit.protectedAt)s='protected';
+    if(p.status==='rented')s='keys';
+    buckets[s].push(p);
+  }
+  // holding deposit register
+  const hold=lets.filter(p=>p.rent.holdingDeposit>0);
+  return `<div class="section-h"><h2>Lettings pipeline</h2><div class="sub">${lets.length} lettings · Tenant Fees Act 2019 enforced</div></div>
+  <div class="grid">
+  ${stages.map(s=>{
+    const items=buckets[s];
+    return `<div class="card"><h3>${s} <span class="meta">${items.length}</span></h3>
+      ${items.length?items.map(p=>`<div class="prop-card" onclick="selectProperty('${p.id}')"><div class="nm">${esc(p.address.line1)}</div><div class="sub"><span>${esc(p.ref)}</span><span>${money(p.rent.pcm)}pcm</span></div></div>`).join(''):'<div class="empty-state">—</div>'}
+    </div>`;
+  }).join('')}
+  </div>
+  <div class="card" style="margin-top:14px"><h3>Holding deposits register <span class="meta">cap 1 week's rent (TFA 2019)</span></h3>
+    ${hold.length?`<table><thead><tr><th>Property</th><th class="r">Rent pcm</th><th class="r">Cap (1w)</th><th class="r">Held</th><th>Status</th></tr></thead><tbody>${hold.map(p=>{
+      const cap=holdingCap(p.rent.pcm);const ok=p.rent.holdingDeposit<=cap;
+      return `<tr><td>${esc(p.ref)} · ${esc(p.address.line1)}</td><td class="r">${money(p.rent.pcm)}</td><td class="r">${money(cap)}</td><td class="r ${ok?'':'red'}">${money(p.rent.holdingDeposit)}</td><td>${ok?'<span class="tag green">within cap</span>':'<span class="tag red">EXCEEDS CAP</span>'}</td></tr>`;
+    }).join('')}</tbody></table>`:'<div class="empty-state">No holding deposits currently held.</div>'}
+    <div class="kpi" style="margin-top:8px"><span class="l">Refund triggers</span><span class="v" style="font-family:var(--sans);font-size:11px">Landlord withdraws · agent fails referencing through no fault of tenant · 15 days elapse without tenancy. Forfeit grounds: tenant withdraws · fails Right-to-Rent · misleading info.</span></div>
+  </div>`;
+}
+
+// ── TENANCIES ───────────────────────────────────────────────────────
+function viewTenancies(){
+  const list=state.tenancies.slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  return `<div class="section-h"><h2>Tenancies</h2><div class="sub">${list.filter(t=>t.status==='active').length} active</div></div>
+  <div class="card"><table>
+    <thead><tr><th>Property</th><th>Type</th><th>Tenants</th><th>Start</th><th>End</th><th class="r">Rent pcm</th><th class="r">Deposit</th><th>Protected</th><th>Status</th></tr></thead>
+    <tbody>${list.map(t=>{
+      const p=state.properties.find(x=>x.id===t.propertyId)||{ref:'?',address:{line1:'?'}};
+      const tns=t.tenantIds.map(id=>{const c=state.clients.find(x=>x.id===id);return c?(c.firstName+' '+c.lastName):'?'}).join(', ');
+      return `<tr class="clickable" onclick="selectProperty('${t.propertyId}');setPTab('tenancy')">
+        <td><strong>${esc(p.ref)}</strong> ${esc(p.address.line1)}</td>
+        <td>${esc(t.type)}</td><td>${esc(tns)}</td>
+        <td>${t.startDate}</td><td>${t.endDate}</td>
+        <td class="r">${money(t.rent.pcm)}</td><td class="r">${money(t.deposit.amount)}</td>
+        <td>${t.deposit.protectedAt?`<span class="tag green">${esc(t.deposit.scheme)}</span>`:'<span class="tag red">NOT PROTECTED</span>'}</td>
+        <td>${esc(t.status)}</td></tr>`;
+    }).join('')||'<tr><td colspan="9" style="text-align:center;color:var(--cream-muted);padding:24px">No tenancies. Create one from a let property.</td></tr>'}</tbody>
+  </table></div>`;
+}
+
+// ── COMPLIANCE ──────────────────────────────────────────────────────
+function viewCompliance(){
+  const today=now();
+  const lets=state.properties.filter(p=>p.listingType==='let-residential'||p.listingType==='let-commercial');
+  const rowsHtml=(label,getDate)=>lets.map(p=>{
+    const d=getDate(p);if(!d)return `<tr><td>${esc(p.ref)}</td><td>${esc(p.address.line1)}</td><td><span class="tag red">missing</span></td><td>—</td></tr>`;
+    const days=daysBetween(today,d);
+    const sev=days<0?'red':days<60?'amber':'green';
+    return `<tr><td>${esc(p.ref)}</td><td>${esc(p.address.line1)}</td><td><span class="tag ${sev}">${days<0?'EXPIRED':days+'d'}</span></td><td>${dateStr(d)}</td></tr>`;
+  }).join('');
+
+  return `<div class="section-h"><h2>Compliance tracker</h2><div class="sub">Gas · EPC · EICR · Right-to-Rent · Deposit clocks</div></div>
+  <div class="grid">
+    <div class="card"><h3>Gas Safety · CP12 <span class="meta">annual</span></h3>
+      <table><thead><tr><th>Ref</th><th>Property</th><th>Status</th><th>Expires</th></tr></thead>
+      <tbody>${lets.length?rowsHtml('gas',p=>p.gasCheckExpiry):'<tr><td colspan="4" style="text-align:center;color:var(--cream-muted);padding:14px">No let properties.</td></tr>'}</tbody></table>
+    </div>
+    <div class="card"><h3>EPC <span class="meta">E or above required</span></h3>
+      <table><thead><tr><th>Ref</th><th>Property</th><th>Status</th><th>Expires</th></tr></thead>
+      <tbody>${lets.length?rowsHtml('epc',p=>p.epcExpiresAt):'<tr><td colspan="4" style="text-align:center;color:var(--cream-muted);padding:14px">No let properties.</td></tr>'}</tbody></table>
+      ${lets.filter(p=>p.epcRating&&'FG'.includes(p.epcRating)).length?'<div class="sug red"><div class="prio">MEES breach</div>'+lets.filter(p=>p.epcRating&&'FG'.includes(p.epcRating)).map(p=>esc(p.ref)+' · EPC '+esc(p.epcRating)).join(' · ')+'</div>':''}
+    </div>
+    <div class="card"><h3>EICR <span class="meta">every 5 years</span></h3>
+      <table><thead><tr><th>Ref</th><th>Property</th><th>Status</th><th>Expires</th></tr></thead>
+      <tbody>${lets.length?rowsHtml('eicr',p=>p.eicrExpiry):'<tr><td colspan="4" style="text-align:center;color:var(--cream-muted);padding:14px">No let properties.</td></tr>'}</tbody></table>
+    </div>
+    <div class="card"><h3>Right-to-Rent <span class="meta">England 2014+</span></h3>
+      <table><thead><tr><th>Tenant</th><th>Checked</th><th>Status</th></tr></thead>
+      <tbody>${state.clients.filter(c=>c.role==='tenant').map(c=>{
+        const d=c.rightToRentCheckedAt;const sev=d?'green':'red';
+        return `<tr><td>${esc((c.firstName||'')+' '+(c.lastName||''))}</td><td>${dateStr(d)}</td><td><span class="tag ${sev}">${d?'OK':'MISSING'}</span></td></tr>`;
+      }).join('')||'<tr><td colspan="3" style="text-align:center;color:var(--cream-muted);padding:14px">No tenants on file.</td></tr>'}</tbody></table>
+      <button class="btn sm" onclick="openModal('shareCode')" style="margin-top:10px">Verify share code</button>
+    </div>
+    <div class="card"><h3>Deposit protection clocks <span class="meta">30 days from receipt</span></h3>
+      ${state.tenancies.filter(t=>t.status==='active').map(t=>{
+        const p=state.properties.find(x=>x.id===t.propertyId)||{ref:'?',address:{line1:'?'}};
+        const ds=daysBetween(new Date(t.startDate).getTime(),today);
+        const protected_=!!t.deposit.protectedAt;
+        const sev=protected_?'ok':(ds>=RULES.depositProtectionDays?'red':ds>=RULES.redDay?'red':ds>=RULES.amberDay?'amber':'ok');
+        return `<div class="cert-row ${sev}"><div><div class="nm">${esc(p.ref)} · ${esc(p.address.line1)}</div><div class="due">started ${t.startDate} · ${ds}d ago</div></div><div class="due">${protected_?'PROTECTED '+dateStr(t.deposit.protectedAt):(RULES.depositProtectionDays-ds)+'d remaining'}</div></div>`;
+      }).join('')||'<div class="empty-state">No active tenancies.</div>'}
+    </div>
+  </div>`;
+}
+
+// ── CMP (Client Money Protection) ──────────────────────────────────
+function viewCMP(){
+  const list=state.clientMoney.slice().sort((a,b)=>b.ts-a.ts);
+  const held=state.clientMoney.reduce((s,c)=>{
+    if(c.type==='depositHeld'||c.type==='rent'||c.type==='holdingDeposit')return s+Math.abs(c.amount);
+    if(c.type==='depositProtected'||c.type==='disbursementToLandlord'||c.type==='contractorPayment'||c.type==='agencyFee')return s-Math.abs(c.amount);
+    return s;
+  },0);
+  return `<div class="section-h"><h2>Client Money Protection ledger</h2><div class="sub">Scheme: ${esc(state.firm.cmpScheme||'—')} · Insurer: ${esc(state.firm.clientMoneyInsurer||'—')}</div></div>
+  <div class="grid">
+    <div class="card"><h3>Position</h3>
+      <div class="kpi"><span class="l">Currently held (calc)</span><span class="v brass">${money(held)}</span></div>
+      <div class="kpi"><span class="l">Entries logged</span><span class="v">${list.length}</span></div>
+      <div class="kpi"><span class="l">Last entry</span><span class="v">${list.length?dateStr(list[0].ts):'—'}</span></div>
+    </div>
+    <div class="card"><h3>+ Manual entry</h3>
+      <div class="row">
+        <div class="field"><label>Type</label>
+          <select id="cm_t">
+            <option value="rent">Rent in</option>
+            <option value="depositHeld">Deposit held</option>
+            <option value="holdingDeposit">Holding deposit</option>
+            <option value="depositProtected">Deposit forwarded to scheme</option>
+            <option value="disbursementToLandlord">Disbursement to landlord</option>
+            <option value="contractorPayment">Contractor payment</option>
+            <option value="agencyFee">Agency fee</option>
+          </select>
+        </div>
+        <div class="field"><label>Amount £</label><input type="number" id="cm_a"></div>
+      </div>
+      <div class="field"><label>Description</label><input id="cm_d"></div>
+      <button class="btn primary sm" onclick="addCMP()" style="margin-top:8px">+ Log</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px"><h3>Ledger <span class="meta">CMP Regulations 2018 · daily reconciliation</span></h3>
+    <table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th class="r">Amount</th></tr></thead>
+    <tbody>${list.map(c=>`<tr><td>${dateStr(c.ts)}</td><td>${esc(c.type)}</td><td>${esc(c.description||'')}</td><td class="r ${c.amount>=0?'':'red'}">${money(c.amount)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--cream-muted);padding:18px">No client money entries.</td></tr>'}</tbody></table>
+  </div>`;
+}
+async function addCMP(){
+  const t=$('#cm_t').value;let a=+$('#cm_a').value||0;
+  if(['depositProtected','disbursementToLandlord','contractorPayment','agencyFee'].includes(t))a=-Math.abs(a); else a=Math.abs(a);
+  const cm={id:'cm_'+uid(),firmId:state.firm.id,propertyId:state.activePropertyId,tenancyId:'',ts:now(),type:t,amount:a,direction:a>=0?'in':'out',description:$('#cm_d').value.trim()};
+  state.clientMoney.push(cm);await idbPut('clientMoney',cm);
+  await auditPush('clientMoney.entry','CMP ledger entry',{type:t,amount:a});
+  meshBroadcast('clientMoney.entry',cm);
+  toast('Entered');render();
+}
+
+// ── Q & A ───────────────────────────────────────────────────────────
+function viewQA(){
+  const items=state.chat.length?state.chat.map(m=>`<div class="msg ${m.role}">${esc(m.text)}${m.src?`<div class="src">${esc(m.src)}</div>`:''}</div>`).join(''):'<div class="empty-state">Ask a question · 14 T0 rules · BYOK for T3</div>';
+  return `<div class="section-h"><h2>Q & A</h2><div class="sub">T0 offline · 14 rules · T3 BYOK (Anthropic / Gemini / OpenAI / OpenRouter)</div></div>
+  <div class="card">
+    <div class="chat" id="chat">${items}</div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="e.g. Tenant Fees Act caps · Section 21 pre-checks · deposit protection 30-day rule" onkeydown="if(event.key==='Enter')askChat()">
+      <button class="btn primary" onclick="askChat()">Ask</button>
+    </div>
+    <div style="margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--cream-muted);letter-spacing:0.06em">Suggested: ${T0_RULES.map(r=>`<a onclick="$('#chatInput').value='${esc(r.q)}';askChat();return false" href="#">${esc(r.q)}</a>`).join(' · ')}</div>
+  </div>`;
+}
+const T0_RULES=[
+  {q:'Tenant Fees Act 2019 prohibited fees?',a:`Since 1 June 2019 (England), landlords/agents may only charge: rent, refundable tenancy deposit (capped), refundable holding deposit (capped to 1 week), fees for tenant default (e.g. lost keys, late rent >14d at BoE+3%), changes to tenancy at tenant request (capped £50 or reasonable cost), early termination at tenant request, utilities/comms/TV licence/council tax where in tenancy.
+PROHIBITED: admin fees, referencing, credit checks, professional cleaning, inventory, check-in/out, renewal fees, viewing fees, "premium" listings.
+Breach: civil penalty up to £5,000 first offence, £30,000 (or criminal) for repeat. Trading Standards enforces.`,src:'Tenant Fees Act 2019 ss.1-3, Sch.1'},
+  {q:'Tenancy deposit 30-day protection rule?',a:`Housing Act 2004 (as amended) — landlord/agent must protect any AST deposit in TDS, DPS, or mydeposits within 30 days of receipt AND serve Prescribed Information on tenant within 30 days. Failure: court may award tenant 1-3x deposit + bars Section 21. Re-protect on renewal.`,src:'Housing Act 2004 s.213-215; Localism Act 2011 amendments'},
+  {q:'Prescribed Information requirements?',a:`Per The Housing (Tenancy Deposits) (Prescribed Information) Order 2007: scheme name + contact details, scheme leaflet, amount of deposit, address, landlord & tenant contact info, circumstances of withholding, dispute procedure, tenant signature confirming receipt + agreement. Must be served within 30 days of deposit receipt.`,src:'SI 2007/797'},
+  {q:'Section 21 abolition status (Renters Rights Bill)?',a:`The Renters Rights Bill (introduced Sept 2024, ongoing) abolishes Section 21 "no-fault" evictions, ends fixed-term ASTs (all become periodic), strengthens Section 8 grounds, introduces decent homes standard, Awaab's Law, landlord ombudsman, PRS database. As of 2026-06, NOT yet in force — S21 remains available subject to pre-conditions. Track Royal Assent + commencement.`,src:'Renters Rights Bill (HL Bill, 2024-25 session)'},
+  {q:'Section 8 grounds?',a:`Housing Act 1988 Sch.2: mandatory grounds 1-8 (court must order possession if proven), discretionary 9-17. Common: G8 ≥8 weeks rent arrears (weekly) / ≥2 months (monthly) MANDATORY; G10 some arrears discretionary; G11 persistent late rent; G12 breach; G13 deterioration; G14 nuisance/illegal use (incl. anti-social); G17 false statement. Notice period varies by ground.`,src:'Housing Act 1988 Sch.2'},
+  {q:'Right-to-Rent process?',a:`Immigration Act 2014 (England) — landlords/agents MUST check every adult occupier's right to rent BEFORE tenancy. Acceptable: passport, BRP, share code (gov.uk/right-to-rent), List A/B documents. For time-limited: re-check before expiry. Discrimination prohibited (treat all applicants the same). Civil penalty up to £3,000 per tenant; criminal offence for knowing rental to disqualified person.`,src:'Immigration Act 2014 Pt.3; Code of Practice 2022'},
+  {q:'ARLA Code of Practice?',a:`Propertymark (ARLA) Conduct & Membership Rules require: CMP membership, professional indemnity, redress scheme, transparent fees, written tenancy agreements, deposit protection, gas/EPC/EICR compliance, complaints procedure, CPD, AML supervision. Annual fee + accountant's report. Sanctions: warning → fine → expulsion.`,src:'Propertymark Conduct & Membership Rules'},
+  {q:'CMP scheme requirements?',a:`Client Money Protection Regulations 2018 (in force 1 April 2019) — letting agents holding client money MUST belong to approved scheme (Propertymark, Client Money Protect, Money Shield, RICS, UKALA, etc.), display certificate at premises + website, hold separate client account, daily reconciliation, annual independent inspection. Penalty up to £30,000 per breach.`,src:'CMP Regs 2018; SI 2019/45'},
+  {q:'Holding deposit refund triggers?',a:`Tenant Fees Act 2019 Sch.2: holding deposit ≤1 week's rent. REFUND if: landlord withdraws, tenant fails referencing through no fault of own, parties don't sign within "deadline for agreement" (15 days default). FORFEIT if: tenant withdraws, fails Right-to-Rent, provides misleading info, fails to enter agreement within deadline. Agent must give written reasons within 7 days.`,src:'Tenant Fees Act 2019 Sch.2'},
+  {q:'EICR every 5 years rule?',a:`Electrical Safety Standards in the PRS (England) Regulations 2020 — landlords must ensure fixed installations inspected & tested by qualified person every 5 years (or sooner if specified), provide report to existing tenants within 28 days, new tenants before occupation, local authority within 7 days on request, remedial work within 28 days. Penalty up to £30,000.`,src:'SI 2020/312'},
+  {q:'Gas Safety CP12 frequency?',a:`Gas Safety (Installation & Use) Regulations 1998 reg.36 — annual check of all gas appliances/flues by Gas Safe registered engineer. Issue CDA12 (Landlord Gas Safety Record) within 28 days; new tenants before occupation, existing within 28 days. 2-year retention. Failure: criminal — fine + imprisonment risk; tort liability if injury.`,src:'SI 1998/2451 reg.36'},
+  {q:'EPC E rating minimum?',a:`MEES (Minimum Energy Efficiency Standards) — Energy Efficiency (PRS) Regs 2015. Domestic PRS: cannot grant new tenancy if EPC F or G (since April 2018); cannot continue existing (since April 2020). Commercial PRS: cannot let if F/G since April 2023. Exemption register (gov.uk PRS Exemptions) for cost cap/listed/consent refused. Future: proposed C rating by 2028 for new tenancies.`,src:'SI 2015/962'},
+  {q:'Tenant Fees Act caps?',a:`Holding deposit: ≤1 week's rent. Tenancy deposit: ≤5 weeks' rent (annual rent <£50k) OR ≤6 weeks' rent (annual rent ≥£50k). Default fees: only as set out in agreement, capped to landlord's reasonable loss. Late rent: only after 14 days overdue, capped to BoE base + 3%. Change of tenant at tenant request: capped £50 or evidenced cost.`,src:'Tenant Fees Act 2019 Sch.1'},
+  {q:'How to evict bad-faith tenant?',a:`Two-track process. (1) Section 8 if breach: serve Form 3 specifying ground(s); notice period varies by ground (2 weeks G8/10/11/12/13/14; 2 months G1/2/3/4/5/6/7/9/16). If unmet, apply to court for possession order; bailiff if necessary. (2) Section 21 (no-fault, while still available): only after fixed term or in periodic tenancy; 2 months minimum notice; pre-conditions MUST be met (deposit protected, prescribed info, gas, EPC, How to Rent, licensing). Cannot self-evict — illegal eviction is criminal (PEA 1977). Use court process.`,src:'Housing Act 1988; Protection from Eviction Act 1977'}
+];
+
+async function askChat(){
+  const i=$('#chatInput');const q=i.value.trim();if(!q)return;
+  state.chat.push({role:'user',text:q});i.value='';
+  render();
+  // T0: pattern match
+  const lc=q.toLowerCase();
+  const hit=T0_RULES.find(r=>r.q.toLowerCase().includes(lc.slice(0,12))||lc.includes(r.q.slice(0,18).toLowerCase()));
+  let answer,src;
+  if(hit){answer=hit.a;src=hit.src+' · T0 offline match'}
+  else if(state.settings.anthropicKey||state.settings.geminiKey||state.settings.openaiKey||state.settings.openrouterKey){
+    answer='[T3 BYOK detected — call would be sent to your configured provider. Implementation note: enable Settings → BYOK; this build does not include outbound calls by default to preserve sovereignty.]';
+    src='T3 BYOK';
+  }else{
+    // generic guidance
+    answer='No exact T0 match. Try one of the 14 suggested rules (under the input). Common topics: deposit protection, Tenant Fees Act, Section 21 pre-checks, Right-to-Rent, Gas Safety, EPC/MEES, EICR, CMP, eviction process. For tailored advice add an API key in Settings (T3 BYOK).';
+    src='T0 fallback · no match';
+  }
+  state.chat.push({role:'bot',text:answer,src});
+  await auditPush('qa.asked','Q&A query',{q,resolvedTier:hit?'T0':(state.settings.anthropicKey?'T3':'T0-fallback')});
+  render();
+  setTimeout(()=>{const c=$('#chat');if(c)c.scrollTop=c.scrollHeight},50);
+}
+
+// ── FIRM ────────────────────────────────────────────────────────────
+function viewFirm(){
+  const f=state.firm;
+  return `<div class="section-h"><h2>Firm</h2><div class="sub">${esc(f.name)}</div></div>
+  <div class="grid">
+    <div class="card"><h3>Identity</h3>
+      <div class="kpi"><span class="l">Name</span><span class="v">${esc(f.name)}</span></div>
+      <div class="kpi"><span class="l">Trading</span><span class="v">${esc(f.tradingName||'—')}</span></div>
+      <div class="kpi"><span class="l">Companies House</span><span class="v">${esc(f.companiesHouseNo||'—')}</span></div>
+      <div class="kpi"><span class="l">VAT</span><span class="v">${esc(f.vatNumber||'—')}</span></div>
+      <div class="kpi"><span class="l">ICO</span><span class="v">${esc(f.icoRef||'—')}</span></div>
+    </div>
+    <div class="card"><h3>Memberships</h3>
+      <div class="kpi"><span class="l">Professional body</span><span class="v">${esc(f.professionalBody||'—')}</span></div>
+      <div class="kpi"><span class="l">Redress scheme</span><span class="v">${esc(f.redressScheme||'—')}</span></div>
+      <div class="kpi"><span class="l">CMP scheme</span><span class="v">${esc(f.cmpScheme||'—')}</span></div>
+      <div class="kpi"><span class="l">Client money insurer</span><span class="v">${esc(f.clientMoneyInsurer||'—')}</span></div>
+      <div class="kpi"><span class="l">AML supervisor</span><span class="v">${esc(f.amlSupervisor||'—')}</span></div>
+      <div class="kpi"><span class="l">AML ref</span><span class="v">${esc(f.amlRefNo||'—')}</span></div>
+    </div>
+    <div class="card"><h3>Agents <span class="meta">${state.advisers.length}</span></h3>
+      ${state.advisers.map(a=>`<div class="kpi"><span class="l">${esc(a.name)}</span><span class="v">${esc(a.role)} · ${esc(a.status)}</span></div>`).join('')}
+      <button class="btn sm primary" onclick="addAgent()" style="margin-top:8px">+ Add agent</button>
+    </div>
+    <div class="card"><h3>Audit chain</h3>
+      <div class="kpi"><span class="l">Entries</span><span class="v">${state.audit.length}</span></div>
+      <div class="kpi"><span class="l">Retention</span><span class="v">6 years (ARLA + GDPR)</span></div>
+      <div class="kpi"><span class="l">Chain enabled</span><span class="v ${state.settings.auditChain?'green':'red'}">${state.settings.auditChain?'YES':'NO'}</span></div>
+      <button class="btn sm" onclick="openModal('exportAudit')" style="margin-top:8px">Export</button>
+    </div>
+  </div>`;
+}
+async function addAgent(){
+  const n=prompt('Agent name');if(!n)return;
+  const ad={id:'ad_'+uid(),firmId:state.firm.id,createdAt:now(),updatedAt:now(),archivedAt:null,name:n,role:'SalesNegotiator',email:'',phone:'',status:'active',startedAt:now(),leftAt:null};
+  state.advisers.push(ad);await idbPut('advisers',ad);
+  meshBroadcastClient('adviser.updated',ad);
+  toast('Agent added');render();
+}
+
+// ── New property modal ─────────────────────────────────────────────
+function newProperty(){
+  openModal('newProp',{title:'+ New property',html:`
+    <div class="row">
+      <div class="field"><label>Reference *</label><input id="np_ref" placeholder="P-0002"></div>
+      <div class="field"><label>Listing type *</label>
+        <select id="np_type">
+          <option value="sale">Sale</option>
+          <option value="let-residential">Let · residential</option>
+          <option value="let-commercial">Let · commercial</option>
+          <option value="management-only">Management only</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Address line 1 *</label><input id="np_l1"></div>
+      <div class="field"><label>Address line 2</label><input id="np_l2"></div>
+    </div>
+    <div class="row r3">
+      <div class="field"><label>City</label><input id="np_city" value="London"></div>
+      <div class="field"><label>Postcode *</label><input id="np_pc"></div>
+      <div class="field"><label>Region</label>
+        <select id="np_reg"><option>England</option><option>Wales</option><option>Scotland</option><option>Northern Ireland</option></select>
+      </div>
+    </div>
+    <div class="row r4">
+      <div class="field"><label>Bedrooms</label><input type="number" id="np_bed" value="2"></div>
+      <div class="field"><label>Bathrooms</label><input type="number" id="np_bath" value="1"></div>
+      <div class="field"><label>Property type</label>
+        <select id="np_pt"><option>Flat</option><option>Terraced house</option><option>Semi-detached</option><option>Detached</option><option>Maisonette</option><option>Bungalow</option><option>Commercial</option></select>
+      </div>
+      <div class="field"><label>Tenure</label>
+        <select id="np_ten"><option>Freehold</option><option>Leasehold</option><option>Share of freehold</option><option>Commonhold</option></select>
+      </div>
+    </div>
+    <div class="row r3">
+      <div class="field"><label>Asking £ / Rent pcm</label><input type="number" id="np_price"></div>
+      <div class="field"><label>EPC rating</label>
+        <select id="np_epc"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select>
+      </div>
+      <div class="field"><label>Agent</label>
+        <select id="np_ag">${state.advisers.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="createProperty()">Create</button></div>
+  `});
+  setTimeout(()=>{const a=$('#np_ag');if(a)a.value=state.settings.currentAdviserId||state.advisers[0]?.id||''},10);
+}
+async function createProperty(){
+  const ref=$('#np_ref').value.trim();const l1=$('#np_l1').value.trim();const pc=$('#np_pc').value.trim().toUpperCase();
+  if(!ref||!l1||!pc){toast('Ref + line1 + postcode required');return}
+  const type=$('#np_type').value;const price=+$('#np_price').value||0;
+  const p={
+    id:'pr_'+uid(),firmId:state.firm.id,ts:now(),updatedAt:now(),archivedAt:null,
+    ref,listingType:type,status:type==='management-only'?'rented':'available',
+    address:{line1:l1,line2:$('#np_l2').value.trim(),city:$('#np_city').value.trim(),region:$('#np_reg').value,postcode:pc,country:'GB'},
+    postcode:pc,bedrooms:+$('#np_bed').value||0,bathrooms:+$('#np_bath').value||0,
+    propertyType:$('#np_pt').value,tenure:$('#np_ten').value,epcRating:$('#np_epc').value,
+    epcExpiresAt:now()+365*86400000*10,
+    marketing:{asking:type==='sale'?price:0,listedAt:now(),listedOn:[],priceHistory:type==='sale'?[{ts:now(),price}]:[]},
+    vendor:[],landlord:[],agentId:$('#np_ag').value||state.settings.currentAdviserId,
+    viewings:[],offers:[],
+    rent:{pcm:type!=='sale'?price:0,deposit:0,holdingDeposit:0,frequency:'monthly'},
+    tenancy:null,docs:[],
+    timeline:[{ts:now(),event:`Property created (${type})`,by:state.settings.currentAdviserId}],
+    notes:''
+  };
+  state.properties.push(p);await idbPut('properties',p);
+  await auditPush('property.created','New property',{ref,type},{propertyId:p.id});
+  meshBroadcast('property.listed',p);
+  state.activePropertyId=p.id;state.active='property';
+  closeModal();toast('Property created');render();
+}
+async function editProperty(id){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  openModal('editProp',{title:'Edit '+p.ref,html:`
+    <div class="row">
+      <div class="field"><label>Reference</label><input id="ep_ref" value="${esc(p.ref)}"></div>
+      <div class="field"><label>Status</label>
+        <select id="ep_status">${['available','under-offer','sstc','exchanged','completed','let-agreed','rented','withdrawn'].map(s=>`<option value="${s}" ${p.status===s?'selected':''}>${s}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Address line 1</label><input id="ep_l1" value="${esc(p.address.line1||'')}"></div>
+      <div class="field"><label>Postcode</label><input id="ep_pc" value="${esc(p.postcode||'')}"></div>
+    </div>
+    <div class="row r4">
+      <div class="field"><label>Bedrooms</label><input type="number" id="ep_bed" value="${p.bedrooms||0}"></div>
+      <div class="field"><label>Bathrooms</label><input type="number" id="ep_bath" value="${p.bathrooms||0}"></div>
+      <div class="field"><label>EPC</label><select id="ep_epc">${['A','B','C','D','E','F','G'].map(r=>`<option ${p.epcRating===r?'selected':''}>${r}</option>`).join('')}</select></div>
+      <div class="field"><label>EPC expires</label><input type="date" id="ep_epcexp" value="${p.epcExpiresAt?dateStr(p.epcExpiresAt):''}"></div>
+    </div>
+    ${p.listingType!=='sale'?`
+    <div class="row r3">
+      <div class="field"><label>Rent pcm</label><input type="number" id="ep_rent" value="${p.rent.pcm||0}"></div>
+      <div class="field"><label>Gas Safety expires</label><input type="date" id="ep_gas" value="${p.gasCheckExpiry?dateStr(p.gasCheckExpiry):''}"></div>
+      <div class="field"><label>EICR expires</label><input type="date" id="ep_eicr" value="${p.eicrExpiry?dateStr(p.eicrExpiry):''}"></div>
+    </div>`:`
+    <div class="row"><div class="field"><label>Asking £</label><input type="number" id="ep_ask" value="${p.marketing.asking||0}"></div></div>`}
+    <div class="row">
+      <div class="field"><label>${p.listingType==='sale'?'Vendor':'Landlord'} client</label>
+        <select id="ep_owner">
+          <option value="">— none —</option>
+          ${state.clients.filter(c=>p.listingType==='sale'?c.role==='seller':c.role==='landlord').map(c=>`<option value="${c.id}" ${((p.listingType==='sale'?p.vendor:p.landlord)[0]===c.id)?'selected':''}>${esc(c.firstName+' '+c.lastName)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>or quick-create</label>
+        <div style="display:flex;gap:4px"><input id="ep_newowner" placeholder="Full name"><button class="btn sm" onclick="quickCreateOwner('${p.id}','${p.listingType}')">+</button></div>
+      </div>
+    </div>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveEditProperty('${p.id}')">Save</button></div>
+  `});
+}
+async function quickCreateOwner(pid,type){
+  const nm=$('#ep_newowner').value.trim();if(!nm){toast('Name?');return}
+  const parts=nm.split(/\s+/);const c={id:'cl_'+uid(),firmId:state.firm.id,createdAt:now(),updatedAt:now(),archivedAt:null,
+    title:'',firstName:parts[0]||'',lastName:parts.slice(1).join(' ')||'',email:'',phone:'',
+    role:type==='sale'?'seller':'landlord',address:{line1:'',city:'',postcode:'',country:'GB'},
+    adviserId:state.settings.currentAdviserId,kyc:{status:'pending',riskGrade:'low'}};
+  state.clients.push(c);await idbPut('clients',c);meshBroadcastClient('client.updated',c);
+  const sel=$('#ep_owner');const opt=document.createElement('option');opt.value=c.id;opt.textContent=nm;opt.selected=true;sel.appendChild(opt);
+  toast('Client created');
+}
+async function saveEditProperty(id){
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  p.ref=$('#ep_ref').value.trim();p.status=$('#ep_status').value;
+  p.address.line1=$('#ep_l1').value.trim();p.postcode=$('#ep_pc').value.trim().toUpperCase();p.address.postcode=p.postcode;
+  p.bedrooms=+$('#ep_bed').value||0;p.bathrooms=+$('#ep_bath').value||0;p.epcRating=$('#ep_epc').value;
+  const ee=$('#ep_epcexp').value;if(ee)p.epcExpiresAt=new Date(ee).getTime();
+  if(p.listingType!=='sale'){
+    p.rent.pcm=+$('#ep_rent').value||0;
+    const g=$('#ep_gas').value;if(g)p.gasCheckExpiry=new Date(g).getTime();
+    const ei=$('#ep_eicr').value;if(ei)p.eicrExpiry=new Date(ei).getTime();
+  }else{
+    p.marketing.asking=+$('#ep_ask').value||0;
+  }
+  const own=$('#ep_owner').value;
+  if(p.listingType==='sale')p.vendor=own?[own]:[];else p.landlord=own?[own]:[];
+  await saveProperty(p);await auditPush('property.updated','Property edited',{ref:p.ref},{propertyId:p.id});
+  closeModal();toast('Saved');render();
+}
+async function deleteProperty(id){
+  if(!confirm('Archive this property? (soft-delete · audit retained)'))return;
+  const p=state.properties.find(x=>x.id===id);if(!p)return;
+  p.archivedAt=now();await idbPut('properties',p);
+  state.properties=state.properties.filter(x=>x.id!==id||x.archivedAt);
+  await auditPush('property.archived','Property archived',{ref:p.ref},{propertyId:p.id});
+  meshBroadcast('property.withdrawn',p);
+  state.activePropertyId=null;state.active='properties';
+  toast('Archived');render();
+}
+
+// ── New tenancy ────────────────────────────────────────────────────
+function newTenancy(pid){
+  const p=state.properties.find(x=>x.id===pid);if(!p)return;
+  openModal('newTen',{title:'+ New tenancy',html:`
+    <div class="row">
+      <div class="field"><label>Type</label>
+        <select id="nt_type"><option>AST</option><option>non-AST</option><option>Company let</option><option>HMO</option></select>
+      </div>
+      <div class="field"><label>Term (months)</label><input type="number" id="nt_term" value="12"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Start date</label><input type="date" id="nt_start" value="${dateStr(now())}"></div>
+      <div class="field"><label>End date</label><input type="date" id="nt_end" value="${dateStr(now()+365*86400000)}"></div>
+    </div>
+    <div class="row r3">
+      <div class="field"><label>Rent pcm</label><input type="number" id="nt_rent" value="${p.rent.pcm||0}"></div>
+      <div class="field"><label>Deposit £ <span class="hint">cap ${money(depositCap(p.rent.pcm))}</span></label><input type="number" id="nt_dep" value="${depositCap(p.rent.pcm)}"></div>
+      <div class="field"><label>Day rent due</label><input type="number" id="nt_day" value="1"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Deposit scheme</label>
+        <select id="nt_scheme"><option>TDS</option><option>DPS</option><option>mydeposits</option></select>
+      </div>
+      <div class="field"><label>Tenant</label>
+        <select id="nt_tenant">
+          <option value="">— none —</option>
+          ${state.clients.filter(c=>c.role==='tenant').map(c=>`<option value="${c.id}">${esc(c.firstName+' '+c.lastName)}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>or quick-create tenant</label>
+      <div style="display:flex;gap:4px"><input id="nt_newt" placeholder="Full name"><button class="btn sm" onclick="quickCreateTenant()">+</button></div>
+    </div>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="createTenancy('${pid}')">Create</button></div>
+  `});
+}
+async function quickCreateTenant(){
+  const nm=$('#nt_newt').value.trim();if(!nm)return;
+  const parts=nm.split(/\s+/);const c={id:'cl_'+uid(),firmId:state.firm.id,createdAt:now(),updatedAt:now(),archivedAt:null,
+    title:'',firstName:parts[0]||'',lastName:parts.slice(1).join(' ')||'',email:'',phone:'',
+    role:'tenant',address:{line1:'',city:'',postcode:'',country:'GB'},
+    adviserId:state.settings.currentAdviserId,kyc:{status:'pending',riskGrade:'low'},
+    referencesObtained:false,rightToRentCheckedAt:null};
+  state.clients.push(c);await idbPut('clients',c);meshBroadcastClient('client.updated',c);
+  const sel=$('#nt_tenant');const opt=document.createElement('option');opt.value=c.id;opt.textContent=nm;opt.selected=true;sel.appendChild(opt);
+  toast('Tenant created');
+}
+async function createTenancy(pid){
+  const p=state.properties.find(x=>x.id===pid);if(!p)return;
+  const tid=$('#nt_tenant').value;if(!tid){toast('Tenant required');return}
+  const t={id:'tn_'+uid(),firmId:state.firm.id,propertyId:pid,ts:now(),updatedAt:now(),archivedAt:null,
+    type:$('#nt_type').value,
+    startDate:$('#nt_start').value,endDate:$('#nt_end').value,termMonths:+$('#nt_term').value||12,
+    rent:{pcm:+$('#nt_rent').value||0,frequency:'monthly',dayDue:+$('#nt_day').value||1},
+    tenantIds:[tid],guarantorId:'',
+    deposit:{amount:+$('#nt_dep').value||0,scheme:$('#nt_scheme').value,certId:'',protectedAt:null,prescribedInfoServedAt:null},
+    howToRentServedAt:null,gasCertServedAt:null,epcServedAt:null,rightToRentCheckedAt:null,
+    status:'active'};
+  state.tenancies.push(t);await idbPut('tenancies',t);
+  p.tenancy={id:t.id,startDate:t.startDate,endDate:t.endDate,type:t.type,tenantIds:t.tenantIds,deposit:{scheme:t.deposit.scheme,certId:'',protectedAt:null}};
+  p.status='rented';
+  // CMP entry for deposit held
+  if(t.deposit.amount>0){
+    const cm={id:'cm_'+uid(),firmId:state.firm.id,propertyId:pid,tenancyId:t.id,ts:now(),type:'depositHeld',amount:t.deposit.amount,direction:'in',description:'Deposit received'};
+    state.clientMoney.push(cm);await idbPut('clientMoney',cm);meshBroadcast('clientMoney.entry',cm);
+  }
+  await saveProperty(p);
+  await auditPush('tenancy.created','Tenancy created',{propertyRef:p.ref,type:t.type},{propertyId:pid,tenancyId:t.id});
+  meshBroadcast('tenancy.created',t);
+  closeModal();toast('Tenancy created · protect deposit within 30 days');
+  setPTab('tenancy');render();
+}
+
+// ── Modal · Palette · Toast ─────────────────────────────────────────
+function openModal(kind,opts){
+  opts=opts||{};
+  $('#modalTitle').textContent=opts.title||kind;
+  let body='';
+  if(kind==='settings'){
+    body=`
+    <div class="field"><label>Audit chain</label>
+      <select id="s_audit"><option value="true" ${state.settings.auditChain?'selected':''}>enabled</option><option value="false" ${!state.settings.auditChain?'selected':''}>disabled</option></select>
+    </div>
+    <div class="field"><label>Active agent</label>
+      <select id="s_ad">${state.advisers.map(a=>`<option value="${a.id}" ${state.settings.currentAdviserId===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select>
+    </div>
+    <h3 style="font-family:var(--serif);margin:12px 0 8px">T3 BYOK · optional</h3>
+    <div class="field"><label>Anthropic API key</label><input type="password" id="s_anthropic" value="${esc(state.settings.anthropicKey)}"></div>
+    <div class="field"><label>Gemini API key</label><input type="password" id="s_gemini" value="${esc(state.settings.geminiKey)}"></div>
+    <div class="field"><label>OpenAI API key</label><input type="password" id="s_openai" value="${esc(state.settings.openaiKey)}"></div>
+    <div class="field"><label>OpenRouter API key</label><input type="password" id="s_openrouter" value="${esc(state.settings.openrouterKey)}"></div>
+    <div class="actions">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveSettingsModal()">Save</button>
+    </div>`;
+  }else if(kind==='exportAudit'){
+    const blob=new Blob([JSON.stringify(state.audit,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    body=`<p>Audit chain · ${state.audit.length} entries · Mansoor P3 extended · 6-year retention.</p>
+      <div class="actions"><a class="btn primary" href="${url}" download="fallestate-audit-${dateStr(now())}.json" onclick="setTimeout(closeModal,200)">Download JSON</a><button class="btn ghost" onclick="closeModal()">Close</button></div>`;
+  }else if(kind==='shareCode'){
+    body=`<p>Right-to-Rent share code verification (manual).</p>
+    <div class="field"><label>Tenant</label><select id="sc_t">${state.clients.filter(c=>c.role==='tenant').map(c=>`<option value="${c.id}">${esc(c.firstName+' '+c.lastName)}</option>`).join('')}</select></div>
+    <div class="field"><label>Share code</label><input id="sc_code" placeholder="ABC1234XY"></div>
+    <div class="field"><label>Method</label><select id="sc_m"><option>Online check (gov.uk)</option><option>Document (passport / BRP)</option><option>List B (time-limited)</option></select></div>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="markRTR()">Mark verified</button></div>`;
+  }else if(kind==='s8'){
+    const t=state.tenancies.find(x=>x.id===opts.tenancyId);const p=state.properties.find(x=>x.id===t.propertyId);
+    body=`<p>Section 8 grounds (Housing Act 1988 Sch.2):</p>
+    <div class="field"><label>Ground(s)</label><select id="s8_g">${Object.entries(RULES.s8Grounds).map(([k,v])=>`<option value="${k}">G${k} — ${esc(v)}</option>`).join('')}</select></div>
+    <div class="field"><label>Particulars</label><textarea id="s8_p" rows="3"></textarea></div>
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="issueS8('${t.id}')">Issue Form 3</button></div>`;
+  }else{
+    body=opts.html||'';
+  }
+  $('#modalBody').innerHTML=body;$('#modal').classList.add('open');
+}
+function closeModal(){$('#modal').classList.remove('open')}
+async function saveSettingsModal(){
+  state.settings.auditChain=$('#s_audit').value==='true';
+  state.settings.currentAdviserId=$('#s_ad').value;
+  state.settings.anthropicKey=$('#s_anthropic').value.trim();
+  state.settings.geminiKey=$('#s_gemini').value.trim();
+  state.settings.openaiKey=$('#s_openai').value.trim();
+  state.settings.openrouterKey=$('#s_openrouter').value.trim();
+  saveSettings();toast('Saved');closeModal();render();
+}
+async function markRTR(){
+  const tid=$('#sc_t').value;const c=state.clients.find(x=>x.id===tid);if(!c)return;
+  c.rightToRentCheckedAt=now();c.rightToRentMethod=$('#sc_m').value;c.rightToRentCode=$('#sc_code').value.trim();c.updatedAt=now();
+  await idbPut('clients',c);meshBroadcastClient('client.updated',c);
+  await auditPush('rightToRent.verified','Right-to-Rent check recorded',{tenantId:tid,method:c.rightToRentMethod},{clientId:tid});
+  closeModal();toast('Verified');render();
+}
+async function issueS8(tid){
+  const g=$('#s8_g').value;const t=state.tenancies.find(x=>x.id===tid);const p=state.properties.find(x=>x.id===t.propertyId);
+  const tenant=state.clients.find(c=>c.id===t.tenantIds[0])||{};
+  const text=`SECTION 8 NOTICE (Housing Act 1988, s.8)
+Form 3 · Ground ${g}: ${RULES.s8Grounds[g]}
+Issued: ${dateStr(now())}
+To: ${(tenant.firstName||'')+' '+(tenant.lastName||'')}
+Property: ${p.address.line1}, ${p.postcode}
+
+Particulars:
+${$('#s8_p').value.trim()||'(none provided)'}
+
+The landlord intends to seek possession on the ground(s) above. You have the right to defend at court. Notice period: minimum 2 weeks (most discretionary grounds); 4 weeks for some; check ground requirements.`;
+  await auditPush('tenancy.s8.issued','Section 8 issued',{ground:g,tenancyId:tid},{propertyId:p.id,tenancyId:tid});
+  closeModal();
+  openModal('s8out',{title:'Section 8 notice issued',html:`<pre style="font-family:var(--mono);font-size:11px;background:var(--ink);padding:14px;border-radius:3px;white-space:pre-wrap">${esc(text)}</pre><div class="actions"><button class="btn ghost" onclick="navigator.clipboard.writeText(\`${text.replace(/`/g,"\\`")}\`);toast('Copied')">Copy</button><button class="btn primary" onclick="closeModal()">Close</button></div>`});
+}
+
+function openPalette(){const p=$('#palette');p.classList.add('open');setTimeout(()=>$('#pInput').focus(),50);renderPalette()}
+function closePalette(){$('#palette').classList.remove('open')}
+function renderPalette(){
+  const q=($('#pInput')&&$('#pInput').value||'').toLowerCase();
+  const rows=[];
+  // commands
+  const cmds=[
+    {l:'+ New property',a:()=>{closePalette();newProperty()}},
+    {l:'Dashboard',a:()=>{closePalette();showApp('dashboard')}},
+    {l:'Sales pipeline',a:()=>{closePalette();showApp('sales')}},
+    {l:'Lettings pipeline',a:()=>{closePalette();showApp('lettings')}},
+    {l:'Compliance tracker',a:()=>{closePalette();showApp('compliance')}},
+    {l:'CMP ledger',a:()=>{closePalette();showApp('cmp')}},
+    {l:'Q & A',a:()=>{closePalette();showApp('qa')}},
+    {l:'Settings',a:()=>{closePalette();openModal('settings')}},
+    {l:'Export audit',a:()=>{closePalette();openModal('exportAudit')}}
+  ];
+  for(const c of cmds)if(!q||c.l.toLowerCase().includes(q))rows.push({l:c.l,glyph:'▸',a:c.a});
+  // properties
+  for(const p of state.properties){
+    const s=(p.ref+' '+p.postcode+' '+(p.address.line1||'')).toLowerCase();
+    if(!q||s.includes(q))rows.push({l:p.ref+' · '+p.address.line1,sub:p.postcode+' · '+p.listingType+' · '+p.status,glyph:'◊',a:()=>{closePalette();selectProperty(p.id)}});
+  }
+  // T0 rules
+  for(const r of T0_RULES){
+    if(!q||r.q.toLowerCase().includes(q))rows.push({l:r.q,sub:'T0 rule',glyph:'?',a:()=>{closePalette();showApp('qa');$('#chatInput').value=r.q;askChat()}});
+  }
+  const body=$('#pBody');
+  body.innerHTML=rows.slice(0,40).map((r,i)=>`<div class="palette-row" data-i="${i}"><span style="color:var(--brass);font-family:var(--serif)">${r.glyph}</span><div><div>${esc(r.l)}</div>${r.sub?`<div style="font-family:var(--mono);font-size:10px;color:var(--cream-muted)">${esc(r.sub)}</div>`:''}</div></div>`).join('')||'<div class="empty-state">No matches.</div>';
+  Array.from(body.children).forEach((el,i)=>el.onclick=rows[i]&&rows[i].a);
+}
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='pInput')renderPalette()});
+
+// boot
+boot();
+</script>
+</body>
+</html>
